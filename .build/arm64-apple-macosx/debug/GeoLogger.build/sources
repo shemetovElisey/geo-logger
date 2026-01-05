@@ -1,8 +1,0 @@
-/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/GeoLoggerConfiguration.swift
-/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/GeoEvent.swift
-/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingFile.swift
-/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingInfo.swift
-/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingMetadata.swift
-/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Recording/RecordingSession.swift
-/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Replay/ReplaySession.swift
-/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Utils/FileManager+Extensions.swift
