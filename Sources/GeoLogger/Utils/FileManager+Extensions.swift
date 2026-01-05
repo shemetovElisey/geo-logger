@@ -1,40 +1,38 @@
 import Foundation
 
-/// Extensions to FileManager for GeoLogger-specific operations
-public extension FileManager {
+extension FileManager {
+    /// Get or create the GeoLogger directory
+    /// - Parameter customDirectory: Optional custom directory, defaults to Documents/GeoLogger
+    /// - Returns: URL of the directory
+    func geoLoggerDirectory(customDirectory: URL?) throws -> URL {
+        let directory: URL
 
-    /// Returns the URL to the GeoLogger directory in the app's document directory.
-    /// Creates the directory if it doesn't exist.
-    ///
-    /// - Returns: URL to the GeoLogger directory
-    /// - Throws: Error if directory creation fails
-    func geoLoggerDirectory() throws -> URL {
-        let documentDirectory = try url(
-            for: .documentDirectory,
-            in: .userDomainMask,
-            appropriateFor: nil,
-            create: true
-        )
-
-        let geoLoggerDir = documentDirectory.appendingPathComponent("GeoLogger")
-
-        if !fileExists(atPath: geoLoggerDir.path) {
-            try createDirectory(at: geoLoggerDir, withIntermediateDirectories: true)
+        if let customDirectory = customDirectory {
+            directory = customDirectory
+        } else {
+            let documentsDirectory = try self.url(
+                for: .documentDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true
+            )
+            directory = documentsDirectory.appendingPathComponent("GeoLogger", isDirectory: true)
         }
 
-        return geoLoggerDir
+        // Create directory if it doesn't exist
+        if !fileExists(atPath: directory.path) {
+            try createDirectory(at: directory, withIntermediateDirectories: true)
+        }
+
+        return directory
     }
 
-    /// Generates a unique recording file name with timestamp
-    ///
-    /// - Returns: A unique file name in the format "geo_log_YYYYMMDD_HHMMSS_UUID.geojson"
+    /// Generate a unique recording file name with timestamp
     static func generateRecordingFileName() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd_HHmmss"
-        let timestamp = dateFormatter.string(from: Date())
-
-        let uuid = UUID().uuidString.prefix(8)
-
-        return "geo_log_\(timestamp)_\(uuid).geojson"
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd_HH-mm-ss"
+        formatter.timeZone = TimeZone.current
+        let timestamp = formatter.string(from: Date())
+        return "geo_log_\(timestamp).json"
     }
 }

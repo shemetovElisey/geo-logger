@@ -73,4 +73,30 @@ final class ReplaySessionTests: XCTestCase {
         XCTAssertNotNil(session)
         XCTAssertFalse(session.isReplaying)
     }
+
+    func testReplayPlayback() throws {
+        let session = try ReplaySession(
+            fileURL: testFileURL,
+            speedMultiplier: 10.0, // 10x speed for fast test
+            loop: false
+        )
+
+        let expectation = XCTestExpectation(description: "Received location updates")
+        var receivedLocations: [CLLocation] = []
+
+        session.onLocationUpdate = { locations in
+            receivedLocations.append(contentsOf: locations)
+            if receivedLocations.count >= 2 {
+                expectation.fulfill()
+            }
+        }
+
+        session.start()
+
+        wait(for: [expectation], timeout: 5.0)
+
+        XCTAssertEqual(receivedLocations.count, 2)
+        XCTAssertEqual(receivedLocations[0].coordinate.latitude, 55.7558, accuracy: 0.0001)
+        XCTAssertEqual(receivedLocations[1].coordinate.latitude, 55.7559, accuracy: 0.0001)
+    }
 }

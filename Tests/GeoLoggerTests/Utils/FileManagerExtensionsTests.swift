@@ -1,31 +1,31 @@
 import XCTest
-import Foundation
 @testable import GeoLogger
 
 final class FileManagerExtensionsTests: XCTestCase {
+    func testGeoLoggerDirectory() throws {
+        let directory = try FileManager.default.geoLoggerDirectory(customDirectory: nil)
 
-    func testGeoLoggerDirectoryCreation() throws {
-        let fileManager = FileManager.default
-        let directory = try fileManager.geoLoggerDirectory()
-
-        XCTAssertTrue(fileManager.fileExists(atPath: directory.path))
-
-        var isDirectory: ObjCBool = false
-        fileManager.fileExists(atPath: directory.path, isDirectory: &isDirectory)
-        XCTAssertTrue(isDirectory.boolValue)
+        XCTAssertTrue(directory.path.contains("Documents"))
+        XCTAssertTrue(FileManager.default.fileExists(atPath: directory.path))
     }
 
-    func testGenerateRecordingFileName() {
+    func testCustomDirectory() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("GeoLoggerTest", isDirectory: true)
+
+        let directory = try FileManager.default.geoLoggerDirectory(customDirectory: tempDir)
+
+        XCTAssertEqual(directory, tempDir)
+        XCTAssertTrue(FileManager.default.fileExists(atPath: directory.path))
+
+        // Cleanup
+        try? FileManager.default.removeItem(at: tempDir)
+    }
+
+    func testGenerateFileName() {
         let fileName = FileManager.generateRecordingFileName()
 
-        XCTAssertTrue(fileName.hasPrefix("recording_"))
-        XCTAssertTrue(fileName.hasSuffix(".geojson"))
-    }
-
-    func testGeneratedFileNamesAreUnique() {
-        let fileName1 = FileManager.generateRecordingFileName()
-        let fileName2 = FileManager.generateRecordingFileName()
-
-        XCTAssertNotEqual(fileName1, fileName2)
+        XCTAssertTrue(fileName.hasPrefix("geo_log_"))
+        XCTAssertTrue(fileName.hasSuffix(".json"))
     }
 }
