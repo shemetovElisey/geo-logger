@@ -1,30 +1,28 @@
 import Foundation
 import CoreLocation
 
-/// Main class that wraps CLLocationManager with recording/replay capabilities.
+/// GeoLogger is a subclass of CLLocationManager with recording and replay capabilities.
 /// 
-/// In replay mode, GeoLogger creates a CLLocationManager and injects recorded location data
-/// into its delegate methods, making it transparent to the application that data is being replayed.
-public final class GeoLogger: NSObject {
+/// Use GeoLogger as a drop-in replacement for CLLocationManager. In replay mode,
+/// recorded location data is injected into delegate methods, making it transparent
+/// to the application that data is being replayed.
+public class GeoLogger: CLLocationManager {
     private let configuration: GeoLoggerConfiguration
-    private var locationManager: CLLocationManager?
-    private var recordingSession: RecordingSession?
-    private var replaySession: ReplaySession?
-
-    /// Delegate for CLLocationManager events (location updates and errors)
-    public weak var locationManagerDelegate: CLLocationManagerDelegate?
+    var recordingSession: RecordingSession?  // internal for InternalDelegate access
+    var replaySession: ReplaySession?  // internal for InternalDelegate access
+    private var internalDelegate: InternalDelegate?
     
     /// Delegate for GeoLogger-specific events (e.g., replay progress)
     public weak var geoLoggerDelegate: GeoLoggerDelegate?
-
+    
     /// Initialize with configuration
     public init(configuration: GeoLoggerConfiguration) {
         self.configuration = configuration
         super.init()
-
+        
         setupForMode()
     }
-
+    
     private func setupForMode() {
         switch configuration.mode {
         case .record:
@@ -35,11 +33,12 @@ public final class GeoLogger: NSObject {
             setupPassthroughMode()
         }
     }
-
+    
     private func setupRecordMode() {
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self  // We intercept to record, then forward to user's delegate
-
+        // Set up internal delegate to intercept location updates for recording
+        internalDelegate = InternalDelegate(geoLogger: self, configuration: configuration)
+        super.delegate = internalDelegate
+        
         do {
             let directory = try FileManager.default.geoLoggerDirectory(
                 customDirectory: configuration.directory
@@ -49,17 +48,17 @@ public final class GeoLogger: NSObject {
             print("GeoLogger: Failed to setup recording session: \(error)")
         }
     }
-
+    
     private func setupReplayMode() {
         guard let fileName = configuration.replayFileName else {
             print("GeoLogger: Replay mode requires replayFileName")
             return
         }
-
-        // Create CLLocationManager for replay mode to simulate standard behavior
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self  // We inject replay data, then forward to user's delegate
-
+        
+        // Set up internal delegate to inject replay data
+        internalDelegate = InternalDelegate(geoLogger: self, configuration: configuration)
+        super.delegate = internalDelegate
+        
         do {
             let directory = try FileManager.default.geoLoggerDirectory(
                 customDirectory: configuration.directory
@@ -87,20 +86,18 @@ public final class GeoLogger: NSObject {
                 speedMultiplier: configuration.replaySpeedMultiplier,
                 loop: configuration.loopReplay
             )
-
-            // Inject locations into CLLocationManager delegate methods to simulate real location updates
-            // This makes replay mode transparent - the app receives data as if from real CLLocationManager
+            
+            // Inject locations into delegate methods to simulate real location updates
             replaySession?.onLocationUpdate = { [weak self] locations in
-                guard let self = self, let manager = self.locationManager else { return }
-                // Simulate CLLocationManager receiving these locations by calling delegate method directly
-                // This triggers locationManager(_:didUpdateLocations:) which forwards to GeoLoggerDelegate
-                self.locationManager(manager, didUpdateLocations: locations)
+                guard let self = self else { return }
+                // Call delegate method directly to simulate CLLocationManager receiving locations
+                self.internalDelegate?.locationManager(self, didUpdateLocations: locations)
             }
-
+            
             replaySession?.onError = { [weak self] error in
-                guard let self = self, let manager = self.locationManager else { return }
-                // Simulate CLLocationManager receiving this error by calling delegate method directly
-                self.locationManager(manager, didFailWithError: error)
+                guard let self = self else { return }
+                // Call delegate method directly to simulate CLLocationManager receiving error
+                self.internalDelegate?.locationManager(self, didFailWithError: error)
             }
             
             replaySession?.onProgressUpdate = { [weak self] progress, currentTime in
@@ -108,76 +105,92 @@ public final class GeoLogger: NSObject {
                 self.geoLoggerDelegate?.geoLogger(self, didUpdateReplayProgress: progress, currentTime: currentTime)
             }
         } catch {
-            // Forward error through CLLocationManagerDelegate
-            if let manager = locationManager {
-                locationManager(manager, didFailWithError: error)
-            }
+            // Forward error through delegate
+            internalDelegate?.locationManager(self, didFailWithError: error)
         }
     }
-
+    
     private func setupPassthroughMode() {
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self  // We just forward to user's delegate
+        // Set up internal delegate to forward to user's delegate
+        internalDelegate = InternalDelegate(geoLogger: self, configuration: configuration)
+        super.delegate = internalDelegate
     }
-
-    // MARK: - Public API (mirrors CLLocationManager)
-
-    public func requestWhenInUseAuthorization() {
-        locationManager?.requestWhenInUseAuthorization()
+    
+    // MARK: - Override delegate property
+    
+    /// The delegate object to receive update events.
+    /// In record and replay modes, GeoLogger uses an internal delegate to intercept events.
+    public override var delegate: CLLocationManagerDelegate? {
+        get {
+            return internalDelegate?.userDelegate
+        }
+        set {
+            internalDelegate?.userDelegate = newValue
+        }
     }
-
-    public func requestAlwaysAuthorization() {
-        locationManager?.requestAlwaysAuthorization()
-    }
-
-    public func startUpdatingLocation() {
+    
+    // MARK: - Override location update methods
+    
+    public override func startUpdatingLocation() {
         switch configuration.mode {
         case .record:
             try? recordingSession?.start()
-            locationManager?.startUpdatingLocation()
+            super.startUpdatingLocation()
         case .replay:
             replaySession?.start()
         case .passthrough:
-            locationManager?.startUpdatingLocation()
+            super.startUpdatingLocation()
         }
     }
-
-    public func stopUpdatingLocation() {
+    
+    public override func stopUpdatingLocation() {
         switch configuration.mode {
         case .record:
             try? recordingSession?.stop()
-            locationManager?.stopUpdatingLocation()
+            super.stopUpdatingLocation()
         case .replay:
             replaySession?.stop()
         case .passthrough:
-            locationManager?.stopUpdatingLocation()
+            super.stopUpdatingLocation()
         }
     }
 }
 
-// MARK: - CLLocationManagerDelegate
+// MARK: - Internal Delegate
 
-// MARK: - CLLocationManagerDelegate
-
-extension GeoLogger: CLLocationManagerDelegate {
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        // Record if in record mode
-        if configuration.mode == .record {
-            locations.forEach { recordingSession?.recordLocation($0) }
-        }
-
-        // Forward to user's CLLocationManagerDelegate
-        locationManagerDelegate?.locationManager?(manager, didUpdateLocations: locations)
+/// Internal delegate that intercepts CLLocationManagerDelegate calls
+private class InternalDelegate: NSObject, CLLocationManagerDelegate {
+    weak var geoLogger: GeoLogger?
+    let configuration: GeoLoggerConfiguration
+    weak var userDelegate: CLLocationManagerDelegate?
+    
+    init(geoLogger: GeoLogger, configuration: GeoLoggerConfiguration) {
+        self.geoLogger = geoLogger
+        self.configuration = configuration
     }
-
-    public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let geoLogger = geoLogger else { return }
+        
         // Record if in record mode
         if configuration.mode == .record {
-            recordingSession?.recordError(error)
+            locations.forEach { geoLogger.recordingSession?.recordLocation($0) }
         }
-
-        // Forward to user's CLLocationManagerDelegate
-        locationManagerDelegate?.locationManager?(manager, didFailWithError: error)
+        
+        // Forward to user's delegate
+        userDelegate?.locationManager?(manager, didUpdateLocations: locations)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        guard let geoLogger = geoLogger else { return }
+        
+        // Record if in record mode
+        if configuration.mode == .record {
+            geoLogger.recordingSession?.recordError(error)
+        }
+        
+        // Forward to user's delegate
+        userDelegate?.locationManager?(manager, didFailWithError: error)
     }
 }
 

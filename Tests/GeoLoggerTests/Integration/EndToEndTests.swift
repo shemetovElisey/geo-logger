@@ -34,7 +34,7 @@ final class EndToEndTests: XCTestCase {
         }
 
         let recordDelegate = RecordDelegate()
-        recordLogger.locationManagerDelegate = recordDelegate
+        recordLogger.delegate = recordDelegate
         recordLogger.startUpdatingLocation()
 
         // Simulate location updates by calling CLLocationManagerDelegate methods directly
@@ -101,7 +101,7 @@ final class EndToEndTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "Replay locations")
         let replayDelegate = ReplayDelegate(expectation: expectation)
-        replayLogger.locationManagerDelegate = replayDelegate
+        replayLogger.delegate = replayDelegate
 
         replayLogger.startUpdatingLocation()
 

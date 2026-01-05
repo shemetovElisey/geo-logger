@@ -62,7 +62,7 @@ config.mode = .record  // or .replay, .passthrough
 let geoLogger = GeoLogger(configuration: config)
 ```
 
-### 3. Set Up Delegates
+### 3. Set Up Delegate
 
 ```swift
 class LocationManager: NSObject, CLLocationManagerDelegate, GeoLoggerDelegate {
@@ -81,8 +81,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate, GeoLoggerDelegate {
 }
 
 let delegate = LocationManager()
-geoLogger.locationManagerDelegate = delegate  // For location updates/errors
-geoLogger.geoLoggerDelegate = delegate        // For replay progress (optional)
+geoLogger.delegate = delegate  // Use standard CLLocationManager delegate property
+geoLogger.geoLoggerDelegate = delegate  // For replay progress (optional)
 ```
 
 ### 4. Request Authorization
@@ -105,7 +105,7 @@ geoLogger.startUpdatingLocation()
 var config = GeoLoggerConfiguration()
 config.mode = .record
 let geoLogger = GeoLogger(configuration: config)
-geoLogger.locationManagerDelegate = self  // Use CLLocationManagerDelegate
+geoLogger.delegate = self  // Use standard CLLocationManager delegate
 
 geoLogger.requestWhenInUseAuthorization()
 geoLogger.startUpdatingLocation()
@@ -124,8 +124,8 @@ config.replaySpeedMultiplier = 2.0  // 2x speed
 config.loopReplay = false
 
 let geoLogger = GeoLogger(configuration: config)
-geoLogger.locationManagerDelegate = self  // For location updates
-geoLogger.geoLoggerDelegate = self        // For progress updates (optional)
+geoLogger.delegate = self  // Use standard CLLocationManager delegate
+geoLogger.geoLoggerDelegate = self  // For progress updates (optional)
 
 geoLogger.startUpdatingLocation()
 
@@ -150,7 +150,7 @@ config.replayFileName = "track.gpx"  // GPX file
 config.replaySpeedMultiplier = 1.0
 
 let geoLogger = GeoLogger(configuration: config)
-geoLogger.locationManagerDelegate = self  // Use CLLocationManagerDelegate
+geoLogger.delegate = self  // Use standard CLLocationManager delegate
 geoLogger.startUpdatingLocation()
 ```
 
@@ -251,14 +251,17 @@ See `Examples/Demo/README.md` for setup instructions.
 
 ### GeoLogger
 
-Main class that wraps `CLLocationManager`.
+Main class that subclasses `CLLocationManager`, providing a drop-in replacement.
 
-**Methods:**
-- `init(configuration: GeoLoggerConfiguration)`
-- `requestWhenInUseAuthorization()`
-- `requestAlwaysAuthorization()`
-- `startUpdatingLocation()`
-- `stopUpdatingLocation()`
+**Inherits from:** `CLLocationManager` - All `CLLocationManager` methods and properties are available.
+
+**Additional Properties:**
+- `geoLoggerDelegate: GeoLoggerDelegate?` - For GeoLogger-specific events (e.g., replay progress)
+
+**Additional Methods:**
+- `init(configuration: GeoLoggerConfiguration)` - Initialize with configuration
+
+**Note:** GeoLogger overrides `delegate` property to intercept events in record/replay modes while still forwarding to your delegate.
 
 ### GeoLoggerDelegate
 
@@ -267,7 +270,7 @@ Protocol for GeoLogger-specific events (e.g., replay progress).
 **Methods:**
 - `geoLogger(_:didUpdateReplayProgress:currentTime:)` - Called when replay progress updates
 
-**Note:** For location updates and errors, use `CLLocationManagerDelegate` directly via `locationManagerDelegate` property.
+**Note:** For location updates and errors, use `CLLocationManagerDelegate` directly via the standard `delegate` property inherited from `CLLocationManager`.
 
 ### RecordingManager
 

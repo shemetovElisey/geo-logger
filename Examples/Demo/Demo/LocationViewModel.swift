@@ -42,7 +42,7 @@ class LocationViewModel: NSObject, ObservableObject {
         config.mode = .record
         
         geoLogger = GeoLogger(configuration: config)
-        geoLogger?.locationManagerDelegate = self
+        geoLogger?.delegate = self  // Use standard CLLocationManagerDelegate
         geoLogger?.geoLoggerDelegate = self
         geoLogger?.requestWhenInUseAuthorization()
         geoLogger?.startUpdatingLocation()
@@ -74,7 +74,7 @@ class LocationViewModel: NSObject, ObservableObject {
         config.loopReplay = false
         
         geoLogger = GeoLogger(configuration: config)
-        geoLogger?.locationManagerDelegate = self
+        geoLogger?.delegate = self  // Use standard CLLocationManagerDelegate
         geoLogger?.geoLoggerDelegate = self
         geoLogger?.startUpdatingLocation()
         
