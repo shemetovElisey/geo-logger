@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		414614792F0BAF53006048DC /* GeoLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 414614782F0BAF53006048DC /* GeoLogger */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		414614592F0BAE5B006048DC /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				414614792F0BAF53006048DC /* GeoLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = Demo;
 			packageProductDependencies = (
+				414614782F0BAF53006048DC /* GeoLogger */,
 			);
 			productName = Demo;
 			productReference = 414614592F0BAE5B006048DC /* Demo.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 414614502F0BAE5B006048DC;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				414614772F0BAF53006048DC /* XCLocalSwiftPackageReference "../../../geo-logger" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4146145A2F0BAE5B006048DC /* Products */;
 			projectDirPath = "";
@@ -256,6 +265,8 @@
 				DEVELOPMENT_TEAM = 22LYDZHQ6W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs location access to record and replay GPS routes for testing purposes.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs location access to record and replay GPS routes for testing purposes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -288,6 +299,8 @@
 				DEVELOPMENT_TEAM = 22LYDZHQ6W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "This app needs location access to record and replay GPS routes for testing purposes.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app needs location access to record and replay GPS routes for testing purposes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -332,6 +345,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		414614772F0BAF53006048DC /* XCLocalSwiftPackageReference "../../../geo-logger" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../../geo-logger";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		414614782F0BAF53006048DC /* GeoLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = GeoLogger;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 414614512F0BAE5B006048DC /* Project object */;
 }

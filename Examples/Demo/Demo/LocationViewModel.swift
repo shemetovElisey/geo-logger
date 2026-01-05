@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 import CoreLocation
 import GeoLogger
 
@@ -22,10 +23,12 @@ class LocationViewModel: NSObject, ObservableObject {
     @Published var errorMessage = ""
     @Published var showShareSheet = false
     @Published var shareURL: URL?
+    @Published var locationHistory: [CLLocation] = []
     
     private var geoLogger: GeoLogger?
     private var recordingManager = RecordingManager.shared
     private var recordingStartTime: Date?
+    
     
     override init() {
         super.init()
@@ -44,6 +47,7 @@ class LocationViewModel: NSObject, ObservableObject {
         isRecording = true
         recordedEventsCount = 0
         recordingStartTime = Date()
+        locationHistory = []
     }
     
     func stopRecording() {
@@ -71,6 +75,7 @@ class LocationViewModel: NSObject, ObservableObject {
         geoLogger?.startUpdatingLocation()
         
         isReplaying = true
+        locationHistory = []
     }
     
     func stopReplay() {
@@ -115,6 +120,13 @@ extension LocationViewModel: GeoLoggerDelegate {
     func geoLogger(_ logger: GeoLogger, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             currentLocation = location
+            locationHistory.append(location)
+            
+            // Keep only last 1000 locations to avoid memory issues
+            if locationHistory.count > 1000 {
+                locationHistory.removeFirst(locationHistory.count - 1000)
+            }
+            
             if isRecording {
                 recordedEventsCount += locations.count
             }

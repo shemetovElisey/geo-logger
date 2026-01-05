@@ -6,41 +6,67 @@
 //
 
 import SwiftUI
+import MapKit
 import CoreLocation
 import GeoLogger
 
 struct ContentView: View {
     @StateObject private var viewModel = LocationViewModel()
+    @State private var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 55.7558, longitude: 37.6173),
+        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+    )
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
-                // Status Section
-                VStack(spacing: 10) {
-                    Text("GeoLogger Demo")
-                        .font(.largeTitle)
-                        .bold()
-                    
-                    if let location = viewModel.currentLocation {
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Current Location:")
-                                .font(.headline)
-                            Text("Lat: \(location.coordinate.latitude, specifier: "%.6f")")
-                            Text("Lon: \(location.coordinate.longitude, specifier: "%.6f")")
-                            Text("Accuracy: \(location.horizontalAccuracy, specifier: "%.1f")m")
-                            if location.speed >= 0 {
-                                Text("Speed: \(location.speed * 3.6, specifier: "%.1f") km/h")
+            VStack(spacing: 0) {
+                // Map Section
+                MapViewRepresentable(
+                    region: $region,
+                    currentLocation: viewModel.currentLocation,
+                    locationHistory: viewModel.locationHistory,
+                    isRecording: viewModel.isRecording,
+                    isReplaying: viewModel.isReplaying
+                )
+                .frame(height: 350)
+                .onChange(of: viewModel.currentLocation) { oldLocation, newLocation in
+                    if let location = newLocation {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            region = MKCoordinateRegion(
+                                center: location.coordinate,
+                                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                            )
+                        }
+                    }
+                }
+                
+                Divider()
+                
+                ScrollView {
+                    VStack(spacing: 20) {
+                        // Status Section
+                        VStack(spacing: 10) {
+                            if let location = viewModel.currentLocation {
+                                VStack(alignment: .leading, spacing: 5) {
+                                    Text("Current Location:")
+                                        .font(.headline)
+                                    Text("Lat: \(location.coordinate.latitude, specifier: "%.6f")")
+                                    Text("Lon: \(location.coordinate.longitude, specifier: "%.6f")")
+                                    Text("Accuracy: \(location.horizontalAccuracy, specifier: "%.1f")m")
+                                    if location.speed >= 0 {
+                                        Text("Speed: \(location.speed * 3.6, specifier: "%.1f") km/h")
+                                    }
+                                }
+                                .padding()
+                                .background(Color.blue.opacity(0.1))
+                                .cornerRadius(10)
+                            } else {
+                                Text("No location data")
+                                    .foregroundColor(.gray)
+                                    .padding()
                             }
                         }
                         .padding()
-                        .background(Color.blue.opacity(0.1))
-                        .cornerRadius(10)
-                    } else {
-                        Text("No location data")
-                            .foregroundColor(.gray)
-                    }
-                }
-                .padding()
                 
                 Divider()
                 
@@ -196,7 +222,8 @@ struct ContentView: View {
                 }
                 .padding()
                 
-                Spacer()
+                    }
+                }
             }
             .navigationTitle("GeoLogger")
             .alert("Error", isPresented: $viewModel.showError) {
