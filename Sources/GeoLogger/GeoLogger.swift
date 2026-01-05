@@ -1,7 +1,10 @@
 import Foundation
 import CoreLocation
 
-/// Main class that wraps CLLocationManager with recording/replay capabilities
+/// Main class that wraps CLLocationManager with recording/replay capabilities.
+/// 
+/// In replay mode, GeoLogger creates a CLLocationManager and injects recorded location data
+/// into its delegate methods, making it transparent to the application that data is being replayed.
 public final class GeoLogger: NSObject {
     private let configuration: GeoLoggerConfiguration
     private var locationManager: CLLocationManager?
@@ -50,6 +53,10 @@ public final class GeoLogger: NSObject {
             return
         }
 
+        // Create CLLocationManager for replay mode to simulate standard behavior
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+
         do {
             let directory = try FileManager.default.geoLoggerDirectory(
                 customDirectory: configuration.directory
@@ -78,14 +85,19 @@ public final class GeoLogger: NSObject {
                 loop: configuration.loopReplay
             )
 
+            // Inject locations into CLLocationManager delegate methods to simulate real location updates
+            // This makes replay mode transparent - the app receives data as if from real CLLocationManager
             replaySession?.onLocationUpdate = { [weak self] locations in
-                guard let self = self else { return }
-                self.delegate?.geoLogger(self, didUpdateLocations: locations)
+                guard let self = self, let manager = self.locationManager else { return }
+                // Simulate CLLocationManager receiving these locations by calling delegate method directly
+                // This triggers locationManager(_:didUpdateLocations:) which forwards to GeoLoggerDelegate
+                self.locationManager(manager, didUpdateLocations: locations)
             }
 
             replaySession?.onError = { [weak self] error in
-                guard let self = self else { return }
-                self.delegate?.geoLogger(self, didFailWithError: error)
+                guard let self = self, let manager = self.locationManager else { return }
+                // Simulate CLLocationManager receiving this error by calling delegate method directly
+                self.locationManager(manager, didFailWithError: error)
             }
             
             replaySession?.onProgressUpdate = { [weak self] progress, currentTime in
