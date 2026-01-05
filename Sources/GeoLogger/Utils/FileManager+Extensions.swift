@@ -27,7 +27,7 @@ public extension FileManager {
 
     /// Generates a unique recording file name with timestamp
     ///
-    /// - Returns: A unique file name in the format "recording_YYYYMMDD_HHMMSS_UUID.geojson"
+    /// - Returns: A unique file name in the format "geo_log_YYYYMMDD_HHMMSS_UUID.geojson"
     static func generateRecordingFileName() -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd_HHmmss"
@@ -35,6 +35,6 @@ public extension FileManager {
 
         let uuid = UUID().uuidString.prefix(8)
 
-        return "recording_\(timestamp)_\(uuid).geojson"
+        return "geo_log_\(timestamp)_\(uuid).geojson"
     }
 }
