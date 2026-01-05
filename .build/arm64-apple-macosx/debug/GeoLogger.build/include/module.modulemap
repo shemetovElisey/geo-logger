@@ -1,0 +1,3 @@
+module GeoLogger {
+    header "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/include/GeoLogger-Swift.h"
+}

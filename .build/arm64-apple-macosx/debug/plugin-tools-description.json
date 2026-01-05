@@ -1,0 +1,904 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.xctest/Contents/MacOS/GeoLoggerPackageTests",
+      "packagePath" : "/Users/e.shemetov/Documents/Developer/geo-logger",
+      "productName" : "GeoLoggerPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.GeoLogger-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/sources",
+      "importPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/GeoLoggerConfiguration.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/GeoEvent.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingFile.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingInfo.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingMetadata.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Recording/RecordingSession.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Replay/ReplaySession.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Utils/FileManager+Extensions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "GeoLogger",
+      "moduleOutputPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules/GeoLogger.swiftmodule",
+      "objects" : [
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoLoggerConfiguration.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoEvent.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingFile.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingInfo.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingMetadata.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingSession.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/ReplaySession.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/FileManager+Extensions.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/include/GeoLogger-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "geo_logger"
+      ],
+      "outputFileMapPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoLoggerConfiguration.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoEvent.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingFile.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingInfo.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingMetadata.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingSession.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/ReplaySession.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/FileManager+Extensions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules/GeoLogger.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/GeoLoggerConfiguration.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/GeoEvent.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingFile.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingInfo.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingMetadata.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Recording/RecordingSession.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Replay/ReplaySession.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Utils/FileManager+Extensions.swift"
+      ],
+      "tempsPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.GeoLoggerPackageTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/sources",
+      "importPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules/GeoLoggerTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "GeoLoggerPackageTests",
+      "moduleOutputPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules/GeoLoggerPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx10.13",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/include/GeoLoggerPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "geo_logger"
+      ],
+      "outputFileMapPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules/GeoLoggerPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.GeoLoggerTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/sources",
+      "importPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/GeoLoggerConfigurationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/GeoEventTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingFileTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingInfoTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingMetadataTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Recording/RecordingSessionTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Replay/ReplaySessionTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Utils/FileManagerExtensionsTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules/GeoLogger.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "GeoLoggerTests",
+      "moduleOutputPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules/GeoLoggerTests.swiftmodule",
+      "objects" : [
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/GeoLoggerConfigurationTests.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/GeoEventTests.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingFileTests.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingInfoTests.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingMetadataTests.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingSessionTests.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/ReplaySessionTests.swift.o",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/FileManagerExtensionsTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j14",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "geo_logger"
+      ],
+      "outputFileMapPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/GeoLoggerConfigurationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/GeoEventTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingFileTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingInfoTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingMetadataTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingSessionTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/ReplaySessionTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/FileManagerExtensionsTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules/GeoLoggerTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/GeoLoggerConfigurationTests.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/GeoEventTests.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingFileTests.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingInfoTests.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingMetadataTests.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Recording/RecordingSessionTests.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Replay/ReplaySessionTests.swift",
+        "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Utils/FileManagerExtensionsTests.swift"
+      ],
+      "tempsPath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "GeoLogger" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "GeoLogger",
+      "-package-name",
+      "geo_logger",
+      "-c",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/GeoLoggerConfiguration.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/GeoEvent.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingFile.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingInfo.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingMetadata.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Recording/RecordingSession.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Replay/ReplaySession.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Utils/FileManager+Extensions.swift",
+      "-I",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/include/GeoLogger-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "geo_logger",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "GeoLoggerPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "GeoLoggerPackageTests",
+      "-package-name",
+      "geo_logger",
+      "-c",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx10.13",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/include/GeoLoggerPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "geo_logger",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "GeoLoggerTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "GeoLoggerTests",
+      "-package-name",
+      "geo_logger",
+      "-c",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/GeoLoggerConfigurationTests.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/GeoEventTests.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingFileTests.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingInfoTests.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingMetadataTests.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Recording/RecordingSessionTests.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Replay/ReplaySessionTests.swift",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Utils/FileManagerExtensionsTests.swift",
+      "-I",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j14",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "geo_logger",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "GeoLogger" : [
+
+    ],
+    "GeoLoggerPackageTests" : [
+      "GeoLoggerTests",
+      "GeoLogger"
+    ],
+    "GeoLoggerTests" : [
+      "GeoLogger"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/GeoLoggerConfiguration.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/GeoEvent.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingFile.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingInfo.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingMetadata.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Recording/RecordingSession.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Replay/ReplaySession.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Utils/FileManager+Extensions.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/sources"
+    },
+    "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/sources"
+    },
+    "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/FileManager+Extensions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoEvent.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoLoggerConfiguration.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingFile.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingInfo.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingMetadata.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingSession.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/ReplaySession.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/FileManagerExtensionsTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/GeoEventTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/GeoLoggerConfigurationTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingFileTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingInfoTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingMetadataTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/RecordingSessionTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/ReplaySessionTests.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/GeoLoggerConfigurationTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/GeoEventTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingFileTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingInfoTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Models/RecordingMetadataTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Recording/RecordingSessionTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Replay/ReplaySessionTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/e.shemetov/Documents/Developer/geo-logger/Tests/GeoLoggerTests/Utils/FileManagerExtensionsTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLoggerTests.build/sources"
+    },
+    "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

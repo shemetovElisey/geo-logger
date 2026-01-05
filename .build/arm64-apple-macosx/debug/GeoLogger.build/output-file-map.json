@@ -1,0 +1,61 @@
+{
+  "": {
+    "swift-dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/master.swiftdeps"
+  },
+  "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/GeoLoggerConfiguration.swift": {
+    "dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoLoggerConfiguration.d",
+    "object": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoLoggerConfiguration.swift.o",
+    "swiftmodule": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoLoggerConfiguration~partial.swiftmodule",
+    "swift-dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoLoggerConfiguration.swiftdeps",
+    "diagnostics": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoLoggerConfiguration.dia"
+  },
+  "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/GeoEvent.swift": {
+    "dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoEvent.d",
+    "object": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoEvent.swift.o",
+    "swiftmodule": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoEvent~partial.swiftmodule",
+    "swift-dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoEvent.swiftdeps",
+    "diagnostics": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/GeoEvent.dia"
+  },
+  "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingFile.swift": {
+    "dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingFile.d",
+    "object": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingFile.swift.o",
+    "swiftmodule": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingFile~partial.swiftmodule",
+    "swift-dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingFile.swiftdeps",
+    "diagnostics": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingFile.dia"
+  },
+  "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingInfo.swift": {
+    "dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingInfo.d",
+    "object": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingInfo.swift.o",
+    "swiftmodule": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingInfo~partial.swiftmodule",
+    "swift-dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingInfo.swiftdeps",
+    "diagnostics": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingInfo.dia"
+  },
+  "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Models/RecordingMetadata.swift": {
+    "dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingMetadata.d",
+    "object": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingMetadata.swift.o",
+    "swiftmodule": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingMetadata~partial.swiftmodule",
+    "swift-dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingMetadata.swiftdeps",
+    "diagnostics": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingMetadata.dia"
+  },
+  "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Recording/RecordingSession.swift": {
+    "dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingSession.d",
+    "object": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingSession.swift.o",
+    "swiftmodule": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingSession~partial.swiftmodule",
+    "swift-dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingSession.swiftdeps",
+    "diagnostics": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/RecordingSession.dia"
+  },
+  "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Replay/ReplaySession.swift": {
+    "dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/ReplaySession.d",
+    "object": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/ReplaySession.swift.o",
+    "swiftmodule": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/ReplaySession~partial.swiftmodule",
+    "swift-dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/ReplaySession.swiftdeps",
+    "diagnostics": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/ReplaySession.dia"
+  },
+  "/Users/e.shemetov/Documents/Developer/geo-logger/Sources/GeoLogger/Utils/FileManager+Extensions.swift": {
+    "dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/FileManager+Extensions.d",
+    "object": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/FileManager+Extensions.swift.o",
+    "swiftmodule": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/FileManager+Extensions~partial.swiftmodule",
+    "swift-dependencies": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/FileManager+Extensions.swiftdeps",
+    "diagnostics": "/Users/e.shemetov/Documents/Developer/geo-logger/.build/arm64-apple-macosx/debug/GeoLogger.build/FileManager+Extensions.dia"
+  }
+}
