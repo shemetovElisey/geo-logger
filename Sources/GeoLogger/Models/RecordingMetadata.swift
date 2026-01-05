@@ -1,22 +1,31 @@
 import Foundation
 
 /// Metadata about a recording session
-struct RecordingMetadata: Codable {
+public struct RecordingMetadata: Codable {
     /// Format version for compatibility
-    let version: String
+    public let version: String
 
     /// When the recording started
-    let recordedAt: Date
+    public let recordedAt: Date
 
     /// Device model (e.g., "iPhone 15 Pro")
-    let device: String
+    public let device: String
 
     /// OS version (e.g., "iOS 17.2")
-    let systemVersion: String
+    public let systemVersion: String
 
     /// Total duration of recording in seconds
-    let duration: TimeInterval
+    public let duration: TimeInterval
 
     /// Total number of events recorded
-    let eventCount: Int
+    public let eventCount: Int
+    
+    public init(version: String, recordedAt: Date, device: String, systemVersion: String, duration: TimeInterval, eventCount: Int) {
+        self.version = version
+        self.recordedAt = recordedAt
+        self.device = device
+        self.systemVersion = systemVersion
+        self.duration = duration
+        self.eventCount = eventCount
+    }
 }

@@ -149,6 +149,9 @@ struct ContentView: View {
                                     },
                                     onShare: {
                                         viewModel.shareRecording(recording)
+                                    },
+                                    onExportGPX: {
+                                        viewModel.exportRecordingAsGPX(recording)
                                     }
                                 )
                             }
@@ -166,13 +169,32 @@ struct ContentView: View {
                         .font(.headline)
                     
                     if let selectedRecording = viewModel.selectedRecording {
-                        VStack(alignment: .leading, spacing: 5) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text("Selected: \(selectedRecording.name)")
                                 .font(.caption)
                             Text("Duration: \(selectedRecording.duration, specifier: "%.1f")s")
                                 .font(.caption)
                             Text("Events: \(selectedRecording.eventCount)")
                                 .font(.caption)
+                            
+                            // Progress bar
+                            if viewModel.isReplaying {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Text("Progress: \(Int(viewModel.replayProgress * 100))%")
+                                            .font(.caption)
+                                            .fontWeight(.medium)
+                                        Spacer()
+                                        Text(formatTime(viewModel.replayCurrentTime) + " / " + formatTime(selectedRecording.duration))
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+                                    
+                                    ProgressView(value: viewModel.replayProgress)
+                                        .progressViewStyle(LinearProgressViewStyle(tint: .green))
+                                }
+                                .padding(.top, 4)
+                            }
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
@@ -246,6 +268,7 @@ struct RecordingRow: View {
     let onSelect: () -> Void
     let onDelete: () -> Void
     let onShare: () -> Void
+    let onExportGPX: () -> Void
     
     var body: some View {
         HStack {
@@ -272,7 +295,14 @@ struct RecordingRow: View {
                     .foregroundColor(.green)
             }
             
-            Button(action: onShare) {
+            Menu {
+                Button(action: onShare) {
+                    Label("Share JSON", systemImage: "square.and.arrow.up")
+                }
+                Button(action: onExportGPX) {
+                    Label("Export as GPX", systemImage: "map")
+                }
+            } label: {
                 Image(systemName: "square.and.arrow.up")
             }
             .buttonStyle(.borderless)
@@ -311,4 +341,11 @@ struct ShareSheet: UIViewControllerRepresentable {
 // Make RecordingInfo identifiable for SwiftUI
 extension RecordingInfo: Identifiable {
     public var id: String { name }
+}
+
+// Helper function to format time
+private func formatTime(_ time: TimeInterval) -> String {
+    let minutes = Int(time) / 60
+    let seconds = Int(time) % 60
+    return String(format: "%d:%02d", minutes, seconds)
 }

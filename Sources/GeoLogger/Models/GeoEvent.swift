@@ -2,7 +2,7 @@ import Foundation
 import CoreLocation
 
 /// Event in a recording (location update or error)
-enum GeoEvent: Codable {
+public enum GeoEvent: Codable {
     case location(timestamp: Date, relativeTime: TimeInterval, location: CLLocation)
     case error(timestamp: Date, relativeTime: TimeInterval, error: Error)
 
@@ -10,7 +10,7 @@ enum GeoEvent: Codable {
         case type, timestamp, relativeTime, data, code, domain, description
     }
 
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         switch self {
@@ -34,7 +34,7 @@ enum GeoEvent: Codable {
         }
     }
 
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let type = try container.decode(String.self, forKey: .type)
         let timestamp = try container.decode(Date.self, forKey: .timestamp)
@@ -61,6 +61,16 @@ enum GeoEvent: Codable {
                 in: container,
                 debugDescription: "Unknown event type: \(type)"
             )
+        }
+    }
+    
+    /// Extract relativeTime from GeoEvent
+    public var relativeTime: TimeInterval {
+        switch self {
+        case .location(_, let relativeTime, _):
+            return relativeTime
+        case .error(_, let relativeTime, _):
+            return relativeTime
         }
     }
 }

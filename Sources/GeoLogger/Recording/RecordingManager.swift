@@ -58,6 +58,36 @@ public final class RecordingManager {
     public func exportRecording(name: String) -> URL {
         return directory.appendingPathComponent(name)
     }
+    
+    /// Export recording to GPX format
+    /// - Parameters:
+    ///   - name: Name of the recording file (JSON)
+    ///   - gpxFileName: Optional custom name for GPX file. If nil, uses original name with .gpx extension
+    /// - Returns: URL of the exported GPX file
+    /// - Throws: Error if recording file cannot be read or GPX file cannot be written
+    public func exportRecordingAsGPX(name: String, gpxFileName: String? = nil) throws -> URL {
+        // Load the recording file
+        let jsonURL = directory.appendingPathComponent(name)
+        let data = try Data(contentsOf: jsonURL)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let recordingFile = try decoder.decode(RecordingFile.self, from: data)
+        
+        // Generate GPX file name
+        let gpxName: String
+        if let customName = gpxFileName {
+            gpxName = customName.hasSuffix(".gpx") ? customName : "\(customName).gpx"
+        } else {
+            let baseName = (name as NSString).deletingPathExtension
+            gpxName = "\(baseName).gpx"
+        }
+        
+        // Export to GPX
+        let gpxURL = directory.appendingPathComponent(gpxName)
+        try GPXExporter.exportToGPX(recordingFile, to: gpxURL)
+        
+        return gpxURL
+    }
 
     private func decodeRecordingFile(_ data: Data) throws -> RecordingFile {
         let decoder = JSONDecoder()

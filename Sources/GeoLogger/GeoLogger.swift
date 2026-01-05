@@ -55,9 +55,25 @@ public final class GeoLogger: NSObject {
                 customDirectory: configuration.directory
             )
             let fileURL = directory.appendingPathComponent(fileName)
-
+            
+            // Check if file is GPX or JSON
+            let isGPX = fileName.lowercased().hasSuffix(".gpx")
+            let recordingFile: RecordingFile
+            
+            if isGPX {
+                // Parse GPX file
+                recordingFile = try GPXParser.parseGPX(from: fileURL)
+            } else {
+                // Parse JSON file
+                let data = try Data(contentsOf: fileURL)
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .iso8601
+                recordingFile = try decoder.decode(RecordingFile.self, from: data)
+            }
+            
+            // Create ReplaySession from RecordingFile
             replaySession = try ReplaySession(
-                fileURL: fileURL,
+                recordingFile: recordingFile,
                 speedMultiplier: configuration.replaySpeedMultiplier,
                 loop: configuration.loopReplay
             )
@@ -70,6 +86,11 @@ public final class GeoLogger: NSObject {
             replaySession?.onError = { [weak self] error in
                 guard let self = self else { return }
                 self.delegate?.geoLogger(self, didFailWithError: error)
+            }
+            
+            replaySession?.onProgressUpdate = { [weak self] progress, currentTime in
+                guard let self = self else { return }
+                self.delegate?.geoLogger(self, didUpdateReplayProgress: progress, currentTime: currentTime)
             }
         } catch {
             delegate?.geoLogger(self, didFailWithError: error)

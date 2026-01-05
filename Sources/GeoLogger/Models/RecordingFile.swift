@@ -1,10 +1,15 @@
 import Foundation
 
 /// Complete recording file structure
-struct RecordingFile: Codable {
+public struct RecordingFile: Codable {
     /// Metadata about the recording
-    let metadata: RecordingMetadata
+    public let metadata: RecordingMetadata
 
     /// Array of events (locations and errors)
-    let events: [GeoEvent]
+    public let events: [GeoEvent]
+    
+    public init(metadata: RecordingMetadata, events: [GeoEvent]) {
+        self.metadata = metadata
+        self.events = events
+    }
 }

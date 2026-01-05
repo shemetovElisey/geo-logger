@@ -99,4 +99,52 @@ final class ReplaySessionTests: XCTestCase {
         XCTAssertEqual(receivedLocations[0].coordinate.latitude, 55.7558, accuracy: 0.0001)
         XCTAssertEqual(receivedLocations[1].coordinate.latitude, 55.7559, accuracy: 0.0001)
     }
+    
+    func testReplayGPXFile() throws {
+        // Create a GPX file
+        let gpxContent = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <gpx version="1.1" creator="GeoLogger">
+            <trk>
+                <trkseg>
+                    <trkpt lat="55.7558" lon="37.6173">
+                        <ele>150.0</ele>
+                        <time>2026-01-05T14:30:01Z</time>
+                    </trkpt>
+                    <trkpt lat="55.7559" lon="37.6174">
+                        <ele>151.0</ele>
+                        <time>2026-01-05T14:30:02Z</time>
+                    </trkpt>
+                </trkseg>
+            </trk>
+        </gpx>
+        """
+        
+        let gpxURL = tempDirectory.appendingPathComponent("test.gpx")
+        try gpxContent.write(to: gpxURL, atomically: true, encoding: .utf8)
+        
+        let session = try ReplaySession(
+            fileURL: gpxURL,
+            speedMultiplier: 10.0,
+            loop: false
+        )
+        
+        let expectation = XCTestExpectation(description: "Received location updates from GPX")
+        var receivedLocations: [CLLocation] = []
+        
+        session.onLocationUpdate = { locations in
+            receivedLocations.append(contentsOf: locations)
+            if receivedLocations.count >= 2 {
+                expectation.fulfill()
+            }
+        }
+        
+        session.start()
+        
+        wait(for: [expectation], timeout: 5.0)
+        
+        XCTAssertEqual(receivedLocations.count, 2)
+        XCTAssertEqual(receivedLocations[0].coordinate.latitude, 55.7558, accuracy: 0.0001)
+        XCTAssertEqual(receivedLocations[1].coordinate.latitude, 55.7559, accuracy: 0.0001)
+    }
 }

@@ -24,6 +24,8 @@ class LocationViewModel: NSObject, ObservableObject {
     @Published var showShareSheet = false
     @Published var shareURL: URL?
     @Published var locationHistory: [CLLocation] = []
+    @Published var replayProgress: Double = 0.0
+    @Published var replayCurrentTime: TimeInterval = 0.0
     
     private var geoLogger: GeoLogger?
     private var recordingManager = RecordingManager.shared
@@ -76,12 +78,16 @@ class LocationViewModel: NSObject, ObservableObject {
         
         isReplaying = true
         locationHistory = []
+        replayProgress = 0.0
+        replayCurrentTime = 0.0
     }
     
     func stopReplay() {
         geoLogger?.stopUpdatingLocation()
         geoLogger = nil
         isReplaying = false
+        replayProgress = 0.0
+        replayCurrentTime = 0.0
     }
     
     func refreshRecordings() {
@@ -114,6 +120,17 @@ class LocationViewModel: NSObject, ObservableObject {
         shareURL = url
         showShareSheet = true
     }
+    
+    func exportRecordingAsGPX(_ recording: RecordingInfo) {
+        do {
+            let gpxURL = try recordingManager.exportRecordingAsGPX(name: recording.name)
+            shareURL = gpxURL
+            showShareSheet = true
+        } catch {
+            errorMessage = "Failed to export as GPX: \(error.localizedDescription)"
+            showError = true
+        }
+    }
 }
 
 extension LocationViewModel: GeoLoggerDelegate {
@@ -131,6 +148,11 @@ extension LocationViewModel: GeoLoggerDelegate {
                 recordedEventsCount += locations.count
             }
         }
+    }
+    
+    func geoLogger(_ logger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval) {
+        replayProgress = progress
+        replayCurrentTime = currentTime
     }
     
     func geoLogger(_ logger: GeoLogger, didFailWithError error: Error) {
