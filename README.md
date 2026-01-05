@@ -62,20 +62,27 @@ config.mode = .record  // or .replay, .passthrough
 let geoLogger = GeoLogger(configuration: config)
 ```
 
-### 3. Set Up Delegate
+### 3. Set Up Delegates
 
 ```swift
-class LocationManager: GeoLoggerDelegate {
-    func geoLogger(_ geoLogger: GeoLogger, didUpdateLocations locations: [CLLocation]) {
+class LocationManager: NSObject, CLLocationManagerDelegate, GeoLoggerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // Handle location updates
     }
     
-    func geoLogger(_ geoLogger: GeoLogger, didFailWithError error: Error) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // Handle errors
+    }
+    
+    // Optional: Handle replay progress updates
+    func geoLogger(_ logger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval) {
+        print("Replay progress: \(progress * 100)%")
     }
 }
 
-geoLogger.delegate = LocationManager()
+let delegate = LocationManager()
+geoLogger.locationManagerDelegate = delegate  // For location updates/errors
+geoLogger.geoLoggerDelegate = delegate        // For replay progress (optional)
 ```
 
 ### 4. Request Authorization
@@ -98,7 +105,7 @@ geoLogger.startUpdatingLocation()
 var config = GeoLoggerConfiguration()
 config.mode = .record
 let geoLogger = GeoLogger(configuration: config)
-geoLogger.delegate = self
+geoLogger.locationManagerDelegate = self  // Use CLLocationManagerDelegate
 
 geoLogger.requestWhenInUseAuthorization()
 geoLogger.startUpdatingLocation()
@@ -117,12 +124,18 @@ config.replaySpeedMultiplier = 2.0  // 2x speed
 config.loopReplay = false
 
 let geoLogger = GeoLogger(configuration: config)
-geoLogger.delegate = self
+geoLogger.locationManagerDelegate = self  // For location updates
+geoLogger.geoLoggerDelegate = self        // For progress updates (optional)
 
 geoLogger.startUpdatingLocation()
 
-// Monitor progress
-func geoLogger(_ geoLogger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval) {
+// Handle location updates via CLLocationManagerDelegate
+func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    // Handle locations
+}
+
+// Monitor progress via GeoLoggerDelegate (optional)
+func geoLogger(_ logger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval) {
     print("Progress: \(progress * 100)%")
     print("Current time: \(currentTime)s")
 }
@@ -137,7 +150,7 @@ config.replayFileName = "track.gpx"  // GPX file
 config.replaySpeedMultiplier = 1.0
 
 let geoLogger = GeoLogger(configuration: config)
-geoLogger.delegate = self
+geoLogger.locationManagerDelegate = self  // Use CLLocationManagerDelegate
 geoLogger.startUpdatingLocation()
 ```
 
@@ -249,12 +262,12 @@ Main class that wraps `CLLocationManager`.
 
 ### GeoLoggerDelegate
 
-Protocol for receiving location updates and errors.
+Protocol for GeoLogger-specific events (e.g., replay progress).
 
 **Methods:**
-- `geoLogger(_:didUpdateLocations:)`
-- `geoLogger(_:didFailWithError:)`
-- `geoLogger(_:didUpdateReplayProgress:currentTime:)`
+- `geoLogger(_:didUpdateReplayProgress:currentTime:)` - Called when replay progress updates
+
+**Note:** For location updates and errors, use `CLLocationManagerDelegate` directly via `locationManagerDelegate` property.
 
 ### RecordingManager
 

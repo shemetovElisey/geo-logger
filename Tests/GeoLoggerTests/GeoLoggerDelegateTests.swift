@@ -4,15 +4,10 @@ import CoreLocation
 
 final class GeoLoggerDelegateTests: XCTestCase {
     class TestDelegate: GeoLoggerDelegate {
-        var locations: [CLLocation] = []
-        var errors: [Error] = []
+        var progressUpdates: [(Double, TimeInterval)] = []
 
-        func geoLogger(_ logger: GeoLogger, didUpdateLocations locations: [CLLocation]) {
-            self.locations.append(contentsOf: locations)
-        }
-
-        func geoLogger(_ logger: GeoLogger, didFailWithError error: Error) {
-            self.errors.append(error)
+        func geoLogger(_ logger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval) {
+            progressUpdates.append((progress, currentTime))
         }
     }
 
@@ -20,8 +15,18 @@ final class GeoLoggerDelegateTests: XCTestCase {
         let delegate = TestDelegate()
 
         XCTAssertNotNil(delegate)
-        XCTAssertEqual(delegate.locations.count, 0)
-        XCTAssertEqual(delegate.errors.count, 0)
+        XCTAssertEqual(delegate.progressUpdates.count, 0)
+    }
+    
+    func testProgressUpdate() {
+        let delegate = TestDelegate()
+        let logger = GeoLogger(configuration: GeoLoggerConfiguration())
+        
+        delegate.geoLogger(logger, didUpdateReplayProgress: 0.5, currentTime: 10.0)
+        
+        XCTAssertEqual(delegate.progressUpdates.count, 1)
+        XCTAssertEqual(delegate.progressUpdates[0].0, 0.5, accuracy: 0.001)
+        XCTAssertEqual(delegate.progressUpdates[0].1, 10.0, accuracy: 0.001)
     }
 }
 

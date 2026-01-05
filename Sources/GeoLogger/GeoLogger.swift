@@ -11,8 +11,11 @@ public final class GeoLogger: NSObject {
     private var recordingSession: RecordingSession?
     private var replaySession: ReplaySession?
 
-    /// Delegate for location updates and errors
-    public weak var delegate: GeoLoggerDelegate?
+    /// Delegate for CLLocationManager events (location updates and errors)
+    public weak var locationManagerDelegate: CLLocationManagerDelegate?
+    
+    /// Delegate for GeoLogger-specific events (e.g., replay progress)
+    public weak var geoLoggerDelegate: GeoLoggerDelegate?
 
     /// Initialize with configuration
     public init(configuration: GeoLoggerConfiguration) {
@@ -35,7 +38,7 @@ public final class GeoLogger: NSObject {
 
     private func setupRecordMode() {
         locationManager = CLLocationManager()
-        locationManager?.delegate = self
+        locationManager?.delegate = self  // We intercept to record, then forward to user's delegate
 
         do {
             let directory = try FileManager.default.geoLoggerDirectory(
@@ -55,7 +58,7 @@ public final class GeoLogger: NSObject {
 
         // Create CLLocationManager for replay mode to simulate standard behavior
         locationManager = CLLocationManager()
-        locationManager?.delegate = self
+        locationManager?.delegate = self  // We inject replay data, then forward to user's delegate
 
         do {
             let directory = try FileManager.default.geoLoggerDirectory(
@@ -102,16 +105,19 @@ public final class GeoLogger: NSObject {
             
             replaySession?.onProgressUpdate = { [weak self] progress, currentTime in
                 guard let self = self else { return }
-                self.delegate?.geoLogger(self, didUpdateReplayProgress: progress, currentTime: currentTime)
+                self.geoLoggerDelegate?.geoLogger(self, didUpdateReplayProgress: progress, currentTime: currentTime)
             }
         } catch {
-            delegate?.geoLogger(self, didFailWithError: error)
+            // Forward error through CLLocationManagerDelegate
+            if let manager = locationManager {
+                locationManager(manager, didFailWithError: error)
+            }
         }
     }
 
     private func setupPassthroughMode() {
         locationManager = CLLocationManager()
-        locationManager?.delegate = self
+        locationManager?.delegate = self  // We just forward to user's delegate
     }
 
     // MARK: - Public API (mirrors CLLocationManager)
@@ -151,6 +157,8 @@ public final class GeoLogger: NSObject {
 
 // MARK: - CLLocationManagerDelegate
 
+// MARK: - CLLocationManagerDelegate
+
 extension GeoLogger: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // Record if in record mode
@@ -158,8 +166,8 @@ extension GeoLogger: CLLocationManagerDelegate {
             locations.forEach { recordingSession?.recordLocation($0) }
         }
 
-        // Forward to delegate
-        delegate?.geoLogger(self, didUpdateLocations: locations)
+        // Forward to user's CLLocationManagerDelegate
+        locationManagerDelegate?.locationManager?(manager, didUpdateLocations: locations)
     }
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -168,8 +176,8 @@ extension GeoLogger: CLLocationManagerDelegate {
             recordingSession?.recordError(error)
         }
 
-        // Forward to delegate
-        delegate?.geoLogger(self, didFailWithError: error)
+        // Forward to user's CLLocationManagerDelegate
+        locationManagerDelegate?.locationManager?(manager, didFailWithError: error)
     }
 }
 

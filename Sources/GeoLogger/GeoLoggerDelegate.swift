@@ -1,14 +1,11 @@
 import Foundation
 import CoreLocation
 
-/// Delegate protocol for GeoLogger events (mirrors CLLocationManagerDelegate)
+/// Delegate protocol for GeoLogger-specific events
+/// 
+/// For location updates and errors, use CLLocationManagerDelegate directly.
+/// This delegate is only for GeoLogger-specific functionality like replay progress.
 public protocol GeoLoggerDelegate: AnyObject {
-    /// Called when new locations are available
-    func geoLogger(_ logger: GeoLogger, didUpdateLocations locations: [CLLocation])
-
-    /// Called when location manager fails with error
-    func geoLogger(_ logger: GeoLogger, didFailWithError error: Error)
-    
     /// Called when replay progress updates (only in replay mode)
     /// - Parameters:
     ///   - logger: The GeoLogger instance
@@ -17,10 +14,8 @@ public protocol GeoLoggerDelegate: AnyObject {
     func geoLogger(_ logger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval)
 }
 
-// Make delegate methods optional
+// Make delegate method optional
 public extension GeoLoggerDelegate {
-    func geoLogger(_ logger: GeoLogger, didUpdateLocations locations: [CLLocation]) {}
-    func geoLogger(_ logger: GeoLogger, didFailWithError error: Error) {}
     func geoLogger(_ logger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval) {}
 }
 

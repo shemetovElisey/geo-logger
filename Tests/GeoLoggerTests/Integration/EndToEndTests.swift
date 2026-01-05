@@ -25,16 +25,16 @@ final class EndToEndTests: XCTestCase {
 
         let recordLogger = GeoLogger(configuration: recordConfig)
 
-        class RecordDelegate: GeoLoggerDelegate {
+        class RecordDelegate: NSObject, CLLocationManagerDelegate {
             var locations: [CLLocation] = []
 
-            func geoLogger(_ logger: GeoLogger, didUpdateLocations locations: [CLLocation]) {
+            func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
                 self.locations.append(contentsOf: locations)
             }
         }
 
         let recordDelegate = RecordDelegate()
-        recordLogger.delegate = recordDelegate
+        recordLogger.locationManagerDelegate = recordDelegate
         recordLogger.startUpdatingLocation()
 
         // Simulate location updates by calling CLLocationManagerDelegate methods directly
@@ -83,7 +83,7 @@ final class EndToEndTests: XCTestCase {
 
         let replayLogger = GeoLogger(configuration: replayConfig)
 
-        class ReplayDelegate: GeoLoggerDelegate {
+        class ReplayDelegate: NSObject, CLLocationManagerDelegate {
             let expectation: XCTestExpectation
             var locations: [CLLocation] = []
 
@@ -91,7 +91,7 @@ final class EndToEndTests: XCTestCase {
                 self.expectation = expectation
             }
 
-            func geoLogger(_ logger: GeoLogger, didUpdateLocations locations: [CLLocation]) {
+            func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
                 self.locations.append(contentsOf: locations)
                 if self.locations.count >= 2 {
                     expectation.fulfill()
@@ -101,7 +101,7 @@ final class EndToEndTests: XCTestCase {
 
         let expectation = XCTestExpectation(description: "Replay locations")
         let replayDelegate = ReplayDelegate(expectation: expectation)
-        replayLogger.delegate = replayDelegate
+        replayLogger.locationManagerDelegate = replayDelegate
 
         replayLogger.startUpdatingLocation()
 

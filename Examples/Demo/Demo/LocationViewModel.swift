@@ -42,7 +42,8 @@ class LocationViewModel: NSObject, ObservableObject {
         config.mode = .record
         
         geoLogger = GeoLogger(configuration: config)
-        geoLogger?.delegate = self
+        geoLogger?.locationManagerDelegate = self
+        geoLogger?.geoLoggerDelegate = self
         geoLogger?.requestWhenInUseAuthorization()
         geoLogger?.startUpdatingLocation()
         
@@ -73,7 +74,8 @@ class LocationViewModel: NSObject, ObservableObject {
         config.loopReplay = false
         
         geoLogger = GeoLogger(configuration: config)
-        geoLogger?.delegate = self
+        geoLogger?.locationManagerDelegate = self
+        geoLogger?.geoLoggerDelegate = self
         geoLogger?.startUpdatingLocation()
         
         isReplaying = true
@@ -133,8 +135,10 @@ class LocationViewModel: NSObject, ObservableObject {
     }
 }
 
-extension LocationViewModel: GeoLoggerDelegate {
-    func geoLogger(_ logger: GeoLogger, didUpdateLocations locations: [CLLocation]) {
+// MARK: - CLLocationManagerDelegate
+
+extension LocationViewModel: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.last {
             currentLocation = location
             locationHistory.append(location)
@@ -150,12 +154,7 @@ extension LocationViewModel: GeoLoggerDelegate {
         }
     }
     
-    func geoLogger(_ logger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval) {
-        replayProgress = progress
-        replayCurrentTime = currentTime
-    }
-    
-    func geoLogger(_ logger: GeoLogger, didFailWithError error: Error) {
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         errorMessage = error.localizedDescription
         showError = true
         
@@ -164,6 +163,15 @@ extension LocationViewModel: GeoLoggerDelegate {
         } else if isReplaying {
             stopReplay()
         }
+    }
+}
+
+// MARK: - GeoLoggerDelegate
+
+extension LocationViewModel: GeoLoggerDelegate {
+    func geoLogger(_ logger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval) {
+        replayProgress = progress
+        replayCurrentTime = currentTime
     }
 }
 
