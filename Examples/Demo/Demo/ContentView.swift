@@ -29,7 +29,7 @@ struct ContentView: View {
                     isReplaying: viewModel.isReplaying
                 )
                 .frame(height: 350)
-                .onChange(of: viewModel.currentLocation) { oldLocation, newLocation in
+                .onChange(of: viewModel.geoLogger?.location) { oldLocation, newLocation in
                     if let location = newLocation {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             region = MKCoordinateRegion(

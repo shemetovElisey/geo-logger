@@ -12,7 +12,7 @@ import GeoLogger
 
 @MainActor
 class LocationViewModel: NSObject, ObservableObject {
-    @Published var currentLocation: CLLocation?
+    @Published var geoLogger: GeoLogger?
     @Published var isRecording = false
     @Published var isReplaying = false
     @Published var recordedEventsCount = 0
@@ -27,9 +27,13 @@ class LocationViewModel: NSObject, ObservableObject {
     @Published var replayProgress: Double = 0.0
     @Published var replayCurrentTime: TimeInterval = 0.0
     
-    private var geoLogger: GeoLogger?
     private var recordingManager = RecordingManager.shared
     private var recordingStartTime: Date?
+    
+    // Computed property that reads location directly from GeoLogger
+    var currentLocation: CLLocation? {
+        geoLogger?.location
+    }
     
     
     override init() {
@@ -41,12 +45,13 @@ class LocationViewModel: NSObject, ObservableObject {
         var config = GeoLoggerConfiguration()
         config.mode = .record
         
-        geoLogger = GeoLogger(configuration: config)
-        geoLogger?.delegate = self  // Use standard CLLocationManagerDelegate
-        geoLogger?.geoLoggerDelegate = self
-        geoLogger?.requestWhenInUseAuthorization()
-        geoLogger?.startUpdatingLocation()
+        let logger = GeoLogger(configuration: config)
+        logger.delegate = self  // Use standard CLLocationManagerDelegate
+        logger.geoLoggerDelegate = self
+        logger.requestWhenInUseAuthorization()
+        logger.startUpdatingLocation()
         
+        geoLogger = logger
         isRecording = true
         recordedEventsCount = 0
         recordingStartTime = Date()
@@ -73,11 +78,12 @@ class LocationViewModel: NSObject, ObservableObject {
         config.replaySpeedMultiplier = replaySpeed
         config.loopReplay = false
         
-        geoLogger = GeoLogger(configuration: config)
-        geoLogger?.delegate = self  // Use standard CLLocationManagerDelegate
-        geoLogger?.geoLoggerDelegate = self
-        geoLogger?.startUpdatingLocation()
+        let logger = GeoLogger(configuration: config)
+        logger.delegate = self  // Use standard CLLocationManagerDelegate
+        logger.geoLoggerDelegate = self
+        logger.startUpdatingLocation()
         
+        geoLogger = logger
         isReplaying = true
         locationHistory = []
         replayProgress = 0.0
@@ -139,8 +145,8 @@ class LocationViewModel: NSObject, ObservableObject {
 
 extension LocationViewModel: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        // Update location history
         if let location = locations.last {
-            currentLocation = location
             locationHistory.append(location)
             
             // Keep only last 1000 locations to avoid memory issues
@@ -152,6 +158,9 @@ extension LocationViewModel: CLLocationManagerDelegate {
                 recordedEventsCount += locations.count
             }
         }
+        
+        // Trigger UI update since we're reading location directly from geoLogger
+        objectWillChange.send()
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
