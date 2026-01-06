@@ -115,7 +115,7 @@ private struct LocationData: Codable {
         self.floor = location.floor?.level
         self.timestamp = location.timestamp
 
-        if #available(iOS 15.0, macOS 12.0, *) {
+        if #available(iOS 15.0, *) {
             self.ellipsoidalAltitude = location.ellipsoidalAltitude
             self.sourceInformation = location.sourceInformation.map {
                 SourceInformationData(
