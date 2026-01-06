@@ -12,8 +12,19 @@ public class GeoLogger: CLLocationManager {
     var replaySession: ReplaySession?  // internal for InternalDelegate access
     private var internalDelegate: InternalDelegate?
     
+    /// Last location received (used in replay mode to override location property)
+    private var lastLocation: CLLocation?
+    
     /// Delegate for GeoLogger-specific events (e.g., replay progress)
     public weak var geoLoggerDelegate: GeoLoggerDelegate?
+    
+    /// Override location property to return lastLocation in replay mode
+    public override var location: CLLocation? {
+        if configuration.mode == .replay {
+            return lastLocation
+        }
+        return super.location
+    }
     
     /// Initialize with configuration
     public init(configuration: GeoLoggerConfiguration) {
@@ -90,6 +101,10 @@ public class GeoLogger: CLLocationManager {
             // Inject locations into delegate methods to simulate real location updates
             replaySession?.onLocationUpdate = { [weak self] locations in
                 guard let self = self else { return }
+                // Store last location for location property override
+                if let lastLocation = locations.last {
+                    self.lastLocation = lastLocation
+                }
                 // Call delegate method directly to simulate CLLocationManager receiving locations
                 self.internalDelegate?.locationManager(self, didUpdateLocations: locations)
             }
@@ -150,6 +165,7 @@ public class GeoLogger: CLLocationManager {
             super.stopUpdatingLocation()
         case .replay:
             replaySession?.stop()
+            lastLocation = nil  // Clear last location when stopping replay
         case .passthrough:
             super.stopUpdatingLocation()
         }

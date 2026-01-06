@@ -159,8 +159,11 @@ extension LocationViewModel: CLLocationManagerDelegate {
             }
         }
         
-        // Trigger UI update since we're reading location directly from geoLogger
-        objectWillChange.send()
+        // Trigger UI update by updating geoLogger property
+        // This ensures SwiftUI sees the change in computed property currentLocation
+        if let logger = geoLogger {
+            geoLogger = logger  // Trigger @Published update
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
