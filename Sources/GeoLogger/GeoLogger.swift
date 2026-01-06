@@ -32,20 +32,7 @@ public class GeoLogger: CLLocationManager {
         super.init()
         
         setupForMode()
-        
-        // Check if we already have authorization and can enable background updates
-        if configuration.allowsBackgroundLocationUpdates {
-            updateBackgroundLocationUpdatesIfAuthorized()
-        }
-    }
-    
-    /// Update allowsBackgroundLocationUpdates based on current authorization status
-    func updateBackgroundLocationUpdatesIfAuthorized() {
-        if authorizationStatus == .authorizedAlways {
-            allowsBackgroundLocationUpdates = true
-        } else {
-            allowsBackgroundLocationUpdates = false
-        }
+        allowsBackgroundLocationUpdates = configuration.allowsBackgroundLocationUpdates
     }
     
     private func setupForMode() {
@@ -243,10 +230,7 @@ private class InternalDelegate: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         guard let geoLogger = geoLogger else { return }
         
-        // Update allowsBackgroundLocationUpdates based on authorization status
-        if configuration.allowsBackgroundLocationUpdates {
-            geoLogger.updateBackgroundLocationUpdatesIfAuthorized()
-        }
+        geoLogger.allowsBackgroundLocationUpdates = configuration.allowsBackgroundLocationUpdates
         
         // Forward to user's delegate
         userDelegate?.locationManager?(manager, didChangeAuthorization: status)

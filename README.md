@@ -123,11 +123,13 @@ geoLogger.startUpdatingLocation()
 geoLogger.stopUpdatingLocation()
 ```
 
-**Note:** For background location updates, you must:
-1. Enable `allowsBackgroundLocationUpdates` in configuration
-2. Request "Always" authorization using `requestAlwaysAuthorization()`
-3. Add "Location updates" capability in your app's Background Modes
-4. Add `NSLocationAlwaysAndWhenInUseUsageDescription` and `NSLocationAlwaysUsageDescription` to Info.plist
+**⚠️ Important:** For background location updates, you must:
+1. **Enable "Location updates" capability in your app's Background Modes** (in Xcode: Project Settings → Signing & Capabilities → + Capability → Background Modes → check "Location updates")
+2. Add `NSLocationAlwaysAndWhenInUseUsageDescription` and `NSLocationAlwaysUsageDescription` to Info.plist
+3. Enable `allowsBackgroundLocationUpdates = true` in configuration
+4. Request "Always" authorization using `requestAlwaysAuthorization()`
+
+**⚠️ Warning:** Setting `allowsBackgroundLocationUpdates = true` without the "Location updates" capability enabled in Xcode will cause the app to crash with an assertion failure. Always ensure the capability is enabled before setting this property to `true`.
 
 ### Replaying Recorded Data
 
@@ -207,7 +209,10 @@ let geoLogger = GeoLogger(configuration: config)
 - `replayFileName: String?` - File name for replay mode
 - `replaySpeedMultiplier: Double` - Speed multiplier for replay (default: 1.0)
 - `loopReplay: Bool` - Whether to loop replay when it ends (default: false)
-- `allowsBackgroundLocationUpdates: Bool` - Enable background location updates (default: false, requires "Always" authorization)
+- `allowsBackgroundLocationUpdates: Bool` - Enable background location updates (default: false)
+  - **⚠️ Requires:** "Location updates" capability in Background Modes (Xcode project settings)
+  - **⚠️ Requires:** "Always" authorization (`requestAlwaysAuthorization()`)
+  - **⚠️ Warning:** Setting to `true` without the capability will cause app crash
 - `pausesLocationUpdatesAutomatically: Bool` - Automatically pause when device is stationary (default: true, saves battery)
 
 ## File Formats
