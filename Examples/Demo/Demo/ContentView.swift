@@ -32,9 +32,20 @@ struct ContentView: View {
                 .onChange(of: viewModel.currentLocation) { oldLocation, newLocation in
                     if let location = newLocation {
                         withAnimation(.easeInOut(duration: 0.5)) {
+                            // Keep current span if it exists, otherwise use default 0.01
+                            let currentSpan = region.span
+                            let span: MKCoordinateSpan
+                            if oldLocation == nil {
+                                // First location - use default span
+                                span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                            } else {
+                                // Keep current span to preserve user's zoom level
+                                span = currentSpan
+                            }
+                            
                             region = MKCoordinateRegion(
                                 center: location.coordinate,
-                                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                                span: span
                             )
                         }
                     }
