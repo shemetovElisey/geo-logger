@@ -29,7 +29,7 @@ struct ContentView: View {
                     isReplaying: viewModel.isReplaying
                 )
                 .frame(height: 350)
-                .onChange(of: viewModel.geoLogger?.location) { oldLocation, newLocation in
+                .onChange(of: viewModel.currentLocation) { oldLocation, newLocation in
                     if let location = newLocation {
                         withAnimation(.easeInOut(duration: 0.5)) {
                             region = MKCoordinateRegion(
@@ -137,10 +137,10 @@ struct ContentView: View {
                             .padding()
                     } else {
                         List {
-                            ForEach(viewModel.recordings) { recording in
+                            ForEach(viewModel.recordings, id: \.name) { recording in
                                 RecordingRow(
                                     recording: recording,
-                                    isSelected: viewModel.selectedRecording?.id == recording.id,
+                                    isSelected: viewModel.selectedRecording?.name == recording.name,
                                     onSelect: {
                                         viewModel.selectRecording(recording)
                                     },
@@ -336,11 +336,6 @@ struct ShareSheet: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
-}
-
-// Make RecordingInfo identifiable for SwiftUI
-extension RecordingInfo: Identifiable {
-    public var id: String { name }
 }
 
 // Helper function to format time

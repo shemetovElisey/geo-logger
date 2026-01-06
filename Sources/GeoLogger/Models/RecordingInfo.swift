@@ -1,7 +1,9 @@
 import Foundation
 
 /// Information about a recorded session file
-public struct RecordingInfo {
+public struct RecordingInfo: Identifiable {
+    public var id: UUID = UUID()
+    
     /// File name of the recording
     public let name: String
 
