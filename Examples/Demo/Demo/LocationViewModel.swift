@@ -26,6 +26,7 @@ class LocationViewModel: NSObject, ObservableObject {
     @Published var locationHistory: [CLLocation] = []
     @Published var replayProgress: Double = 0.0
     @Published var replayCurrentTime: TimeInterval = 0.0
+    @Published var allowsBackgroundLocationUpdates: Bool = false
     
     private var recordingManager = RecordingManager.shared
     private var recordingStartTime: Date?
@@ -44,11 +45,20 @@ class LocationViewModel: NSObject, ObservableObject {
     func startRecording() {
         var config = GeoLoggerConfiguration()
         config.mode = .record
+        config.allowsBackgroundLocationUpdates = allowsBackgroundLocationUpdates
+        config.pausesLocationUpdatesAutomatically = true
         
         let logger = GeoLogger(configuration: config)
         logger.delegate = self  // Use standard CLLocationManagerDelegate
         logger.geoLoggerDelegate = self
-        logger.requestWhenInUseAuthorization()
+        
+        // Request appropriate authorization based on background mode
+        if allowsBackgroundLocationUpdates {
+            logger.requestAlwaysAuthorization()
+        } else {
+            logger.requestWhenInUseAuthorization()
+        }
+        
         logger.startUpdatingLocation()
         
         geoLogger = logger
@@ -175,6 +185,15 @@ extension LocationViewModel: CLLocationManagerDelegate {
         } else if isReplaying {
             stopReplay()
         }
+    }
+    
+    func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+        // Location updates paused (device likely stationary)
+        // This is normal behavior to save battery
+    }
+    
+    func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
+        // Location updates resumed (device started moving)
     }
 }
 

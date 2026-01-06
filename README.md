@@ -104,15 +104,30 @@ geoLogger.startUpdatingLocation()
 ```swift
 var config = GeoLoggerConfiguration()
 config.mode = .record
+config.allowsBackgroundLocationUpdates = true  // Enable background updates
+config.pausesLocationUpdatesAutomatically = true  // Pause when stationary (saves battery)
+
 let geoLogger = GeoLogger(configuration: config)
 geoLogger.delegate = self  // Use standard CLLocationManager delegate
 
-geoLogger.requestWhenInUseAuthorization()
+// Request "Always" authorization for background updates
+if config.allowsBackgroundLocationUpdates {
+    geoLogger.requestAlwaysAuthorization()
+} else {
+    geoLogger.requestWhenInUseAuthorization()
+}
+
 geoLogger.startUpdatingLocation()
 
 // Later, stop recording
 geoLogger.stopUpdatingLocation()
 ```
+
+**Note:** For background location updates, you must:
+1. Enable `allowsBackgroundLocationUpdates` in configuration
+2. Request "Always" authorization using `requestAlwaysAuthorization()`
+3. Add "Location updates" capability in your app's Background Modes
+4. Add `NSLocationAlwaysAndWhenInUseUsageDescription` and `NSLocationAlwaysUsageDescription` to Info.plist
 
 ### Replaying Recorded Data
 
@@ -192,6 +207,8 @@ let geoLogger = GeoLogger(configuration: config)
 - `replayFileName: String?` - File name for replay mode
 - `replaySpeedMultiplier: Double` - Speed multiplier for replay (default: 1.0)
 - `loopReplay: Bool` - Whether to loop replay when it ends (default: false)
+- `allowsBackgroundLocationUpdates: Bool` - Enable background location updates (default: false, requires "Always" authorization)
+- `pausesLocationUpdatesAutomatically: Bool` - Automatically pause when device is stationary (default: true, saves battery)
 
 ## File Formats
 

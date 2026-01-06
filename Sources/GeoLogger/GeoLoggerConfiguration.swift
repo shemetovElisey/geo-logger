@@ -26,6 +26,14 @@ public struct GeoLoggerConfiguration {
 
     /// Whether to loop replay when it ends
     public var loopReplay: Bool = false
+    
+    /// Enable background location updates (requires "Always" authorization)
+    /// When enabled, location updates will continue even when the app is in the background
+    public var allowsBackgroundLocationUpdates: Bool = false
+    
+    /// Automatically pause location updates when the device is likely stationary
+    /// Defaults to true to save battery
+    public var pausesLocationUpdatesAutomatically: Bool = true
 
     public init() {}
 }

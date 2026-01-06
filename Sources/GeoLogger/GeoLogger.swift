@@ -50,6 +50,12 @@ public class GeoLogger: CLLocationManager {
         internalDelegate = InternalDelegate(geoLogger: self, configuration: configuration)
         super.delegate = internalDelegate
         
+        // Configure background location updates if enabled
+        if configuration.allowsBackgroundLocationUpdates {
+            allowsBackgroundLocationUpdates = true
+        }
+        pausesLocationUpdatesAutomatically = configuration.pausesLocationUpdatesAutomatically
+        
         do {
             let directory = try FileManager.default.geoLoggerDirectory(
                 customDirectory: configuration.directory
@@ -129,6 +135,12 @@ public class GeoLogger: CLLocationManager {
         // Set up internal delegate to forward to user's delegate
         internalDelegate = InternalDelegate(geoLogger: self, configuration: configuration)
         super.delegate = internalDelegate
+        
+        // Configure background location updates if enabled
+        if configuration.allowsBackgroundLocationUpdates {
+            allowsBackgroundLocationUpdates = true
+        }
+        pausesLocationUpdatesAutomatically = configuration.pausesLocationUpdatesAutomatically
     }
     
     // MARK: - Override delegate property
@@ -165,7 +177,6 @@ public class GeoLogger: CLLocationManager {
             super.stopUpdatingLocation()
         case .replay:
             replaySession?.stop()
-            lastLocation = nil  // Clear last location when stopping replay
         case .passthrough:
             super.stopUpdatingLocation()
         }
@@ -207,6 +218,16 @@ private class InternalDelegate: NSObject, CLLocationManagerDelegate {
         
         // Forward to user's delegate
         userDelegate?.locationManager?(manager, didFailWithError: error)
+    }
+    
+    func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+        // Forward to user's delegate
+        userDelegate?.locationManagerDidPauseLocationUpdates?(manager)
+    }
+    
+    func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
+        // Forward to user's delegate
+        userDelegate?.locationManagerDidResumeLocationUpdates?(manager)
     }
 }
 

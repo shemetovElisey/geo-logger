@@ -31,21 +31,10 @@ struct ContentView: View {
                 .frame(height: 350)
                 .onChange(of: viewModel.currentLocation) { oldLocation, newLocation in
                     if let location = newLocation {
-                        withAnimation(.easeInOut(duration: 0.5)) {
-                            // Keep current span if it exists, otherwise use default 0.01
-                            let currentSpan = region.span
-                            let span: MKCoordinateSpan
-                            if oldLocation == nil {
-                                // First location - use default span
-                                span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                            } else {
-                                // Keep current span to preserve user's zoom level
-                                span = currentSpan
-                            }
-                            
+                        withAnimation(.easeInOut(duration: 0.5)) {    
                             region = MKCoordinateRegion(
                                 center: location.coordinate,
-                                span: span
+                                span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
                             )
                         }
                     }
@@ -85,6 +74,10 @@ struct ContentView: View {
                 VStack(spacing: 15) {
                     Text("Recording")
                         .font(.headline)
+                    
+                    Toggle("Background Location Updates", isOn: $viewModel.allowsBackgroundLocationUpdates)
+                        .disabled(viewModel.isRecording || viewModel.isReplaying)
+                        .padding(.horizontal)
                     
                     HStack(spacing: 15) {
                         Button(action: {
