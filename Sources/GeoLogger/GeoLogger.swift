@@ -32,6 +32,20 @@ public class GeoLogger: CLLocationManager {
         super.init()
         
         setupForMode()
+        
+        // Check if we already have authorization and can enable background updates
+        if configuration.allowsBackgroundLocationUpdates {
+            updateBackgroundLocationUpdatesIfAuthorized()
+        }
+    }
+    
+    /// Update allowsBackgroundLocationUpdates based on current authorization status
+    func updateBackgroundLocationUpdatesIfAuthorized() {
+        if authorizationStatus == .authorizedAlways {
+            allowsBackgroundLocationUpdates = true
+        } else {
+            allowsBackgroundLocationUpdates = false
+        }
     }
     
     private func setupForMode() {
@@ -50,10 +64,8 @@ public class GeoLogger: CLLocationManager {
         internalDelegate = InternalDelegate(geoLogger: self, configuration: configuration)
         super.delegate = internalDelegate
         
-        // Configure background location updates if enabled
-        if configuration.allowsBackgroundLocationUpdates {
-            allowsBackgroundLocationUpdates = true
-        }
+        // Don't set allowsBackgroundLocationUpdates here - it must be set after authorization
+        // It will be set in locationManager(_:didChangeAuthorization:) when authorization is granted
         pausesLocationUpdatesAutomatically = configuration.pausesLocationUpdatesAutomatically
         
         do {
@@ -136,10 +148,8 @@ public class GeoLogger: CLLocationManager {
         internalDelegate = InternalDelegate(geoLogger: self, configuration: configuration)
         super.delegate = internalDelegate
         
-        // Configure background location updates if enabled
-        if configuration.allowsBackgroundLocationUpdates {
-            allowsBackgroundLocationUpdates = true
-        }
+        // Don't set allowsBackgroundLocationUpdates here - it must be set after authorization
+        // It will be set in locationManager(_:didChangeAuthorization:) when authorization is granted
         pausesLocationUpdatesAutomatically = configuration.pausesLocationUpdatesAutomatically
     }
     
@@ -228,6 +238,18 @@ private class InternalDelegate: NSObject, CLLocationManagerDelegate {
     func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
         // Forward to user's delegate
         userDelegate?.locationManagerDidResumeLocationUpdates?(manager)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        guard let geoLogger = geoLogger else { return }
+        
+        // Update allowsBackgroundLocationUpdates based on authorization status
+        if configuration.allowsBackgroundLocationUpdates {
+            geoLogger.updateBackgroundLocationUpdatesIfAuthorized()
+        }
+        
+        // Forward to user's delegate
+        userDelegate?.locationManager?(manager, didChangeAuthorization: status)
     }
 }
 
