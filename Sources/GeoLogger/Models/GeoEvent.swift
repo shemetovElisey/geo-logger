@@ -109,22 +109,10 @@ private struct LocationData: Codable {
         self.horizontalAccuracy = location.horizontalAccuracy
         self.verticalAccuracy = location.verticalAccuracy
         self.course = location.course
-        if #available(iOS 13.4, macOS 10.15.4, *) {
-            self.courseAccuracy = location.courseAccuracy
-        } else {
-            self.courseAccuracy = -1
-        }
+        self.courseAccuracy = location.courseAccuracy
         self.speed = location.speed
-        if #available(iOS 10.0, macOS 10.15, *) {
-            self.speedAccuracy = location.speedAccuracy
-        } else {
-            self.speedAccuracy = -1
-        }
-        if #available(iOS 8.0, macOS 10.15, *) {
-            self.floor = location.floor?.level
-        } else {
-            self.floor = nil
-        }
+        self.speedAccuracy = location.speedAccuracy
+        self.floor = location.floor?.level
         self.timestamp = location.timestamp
 
         if #available(iOS 15.0, macOS 12.0, *) {
