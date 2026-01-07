@@ -77,7 +77,6 @@ struct MapViewRepresentable: UIViewRepresentable {
                     span: mapView.region.span
                 )
                 mapView.setRegion(newRegion, animated: true)
-                region = newRegion
             }
         }
     }

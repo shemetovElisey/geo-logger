@@ -4,7 +4,7 @@ extension FileManager {
     /// Get or create the GeoLogger directory
     /// - Parameter customDirectory: Optional custom directory, defaults to Documents/GeoLogger
     /// - Returns: URL of the directory
-    func geoLoggerDirectory(customDirectory: URL?) throws -> URL {
+    public func geoLoggerDirectory(customDirectory: URL?) throws -> URL {
         let directory: URL
 
         if let customDirectory = customDirectory {
