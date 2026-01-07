@@ -9,36 +9,24 @@ import SwiftUI
 import MapKit
 import CoreLocation
 import GeoLogger
+import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var viewModel = LocationViewModel()
-    @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 55.7558, longitude: 37.6173),
-        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-    )
+    @State private var showFilePicker = false
     
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
                 // Map Section
                 MapViewRepresentable(
-                    region: $region,
+                    region: $viewModel.region,
+                    isRecording: $viewModel.isRecording,
+                    isReplaying: $viewModel.isReplaying,
                     currentLocation: viewModel.currentLocation,
-                    locationHistory: viewModel.locationHistory,
-                    isRecording: viewModel.isRecording,
-                    isReplaying: viewModel.isReplaying
+                    locationHistory: viewModel.locationHistory
                 )
                 .frame(height: 350)
-                .onChange(of: viewModel.currentLocation) { oldLocation, newLocation in
-                    if let location = newLocation {
-                        withAnimation(.easeInOut(duration: 0.5)) {    
-                            region = MKCoordinateRegion(
-                                center: location.coordinate,
-                                span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                            )
-                        }
-                    }
-                }
                 
                 Divider()
                 
@@ -172,6 +160,39 @@ struct ContentView: View {
                     Text("Replay")
                         .font(.headline)
                     
+                    // External file and clipboard options
+                    HStack(spacing: 10) {
+                        Button(action: {
+                            showFilePicker = true
+                        }) {
+                            HStack {
+                                Image(systemName: "folder")
+                                Text("Select File")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                        }
+                        .disabled(viewModel.isRecording || viewModel.isReplaying)
+                        
+                        Button(action: {
+                            pasteFromClipboard()
+                        }) {
+                            HStack {
+                                Image(systemName: "doc.on.clipboard")
+                                Text("Paste from Clipboard")
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                        }
+                        .disabled(viewModel.isRecording || viewModel.isReplaying)
+                    }
+                    
                     if let selectedRecording = viewModel.selectedRecording {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Selected: \(selectedRecording.name)")
@@ -262,6 +283,42 @@ struct ContentView: View {
                     ShareSheet(activityItems: [shareURL])
                 }
             }
+            .fileImporter(
+                isPresented: $showFilePicker,
+                allowedContentTypes: [.json, .xml, .data, .text],
+                allowsMultipleSelection: false
+            ) { result in
+                switch result {
+                case .success(let urls):
+                    if let url = urls.first {
+                        // Validate file extension
+                        let fileExtension = url.pathExtension.lowercased()
+                        guard fileExtension == "json" || fileExtension == "gpx" || fileExtension == "geojson" else {
+                            viewModel.errorMessage = "Unsupported file type. Please select a JSON or GPX file."
+                            viewModel.showError = true
+                            return
+                        }
+                        
+                        // Access the file URL (requires security-scoped resource access)
+                        _ = url.startAccessingSecurityScopedResource()
+                        viewModel.startReplay(from: url)
+                        url.stopAccessingSecurityScopedResource()
+                    }
+                case .failure(let error):
+                    viewModel.errorMessage = "Failed to select file: \(error.localizedDescription)"
+                    viewModel.showError = true
+                }
+            }
+        }
+    }
+    
+    private func pasteFromClipboard() {
+        let pasteboard = UIPasteboard.general
+        if let text = pasteboard.string, !text.isEmpty {
+            viewModel.startReplay(fromClipboard: text)
+        } else {
+            viewModel.errorMessage = "Clipboard is empty or doesn't contain text"
+            viewModel.showError = true
         }
     }
 }

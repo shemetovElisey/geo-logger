@@ -10,29 +10,49 @@ import MapKit
 
 struct MapViewRepresentable: UIViewRepresentable {
     @Binding var region: MKCoordinateRegion
+    @Binding var isRecording: Bool
+    @Binding var isReplaying: Bool
+    
     let currentLocation: CLLocation?
     let locationHistory: [CLLocation]
-    let isRecording: Bool
-    let isReplaying: Bool
     
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
         mapView.showsUserLocation = false
         mapView.region = region
+        
+        // Add gesture recognizers to detect user interaction
+        let panGesture = UIPanGestureRecognizer(
+            target: context.coordinator,
+            action: #selector(Coordinator.handlePan(_:))
+        )
+        panGesture.delegate = context.coordinator
+        mapView.addGestureRecognizer(panGesture)
+        
+        let pinchGesture = UIPinchGestureRecognizer(
+            target: context.coordinator,
+            action: #selector(Coordinator.handlePinch(_:))
+        )
+        pinchGesture.delegate = context.coordinator
+        mapView.addGestureRecognizer(pinchGesture)
+        
+        let rotationGesture = UIRotationGestureRecognizer(
+            target: context.coordinator,
+            action: #selector(Coordinator.handleRotation(_:))
+        )
+        rotationGesture.delegate = context.coordinator
+        mapView.addGestureRecognizer(rotationGesture)
+        
         return mapView
     }
     
     func updateUIView(_ mapView: MKMapView, context: Context) {
-        // Update region
-        if abs(mapView.region.center.latitude - region.center.latitude) > 0.0001 ||
-           abs(mapView.region.center.longitude - region.center.longitude) > 0.0001 {
-            mapView.setRegion(region, animated: true)
-        }
-        
         // Remove old overlays and annotations
         mapView.removeOverlays(mapView.overlays)
         mapView.removeAnnotations(mapView.annotations)
+        
+        guard isRecording || isReplaying else { return }
         
         // Add route polyline if we have history
         if locationHistory.count > 1 {
@@ -41,7 +61,7 @@ struct MapViewRepresentable: UIViewRepresentable {
             mapView.addOverlay(polyline)
         }
         
-        // Add current location annotation
+        // Add current location annotation and update region if needed
         if let location = currentLocation {
             let annotation = LocationAnnotation(
                 coordinate: location.coordinate,
@@ -50,9 +70,14 @@ struct MapViewRepresentable: UIViewRepresentable {
             )
             mapView.addAnnotation(annotation)
             
-            // Center on location if needed
-            if locationHistory.isEmpty || locationHistory.last?.coordinate.latitude != location.coordinate.latitude {
-                mapView.setCenter(location.coordinate, animated: true)
+            // Update region to follow location only if user is not interacting
+            if !context.coordinator.isUserInteracting {
+                let newRegion = MKCoordinateRegion(
+                    center: location.coordinate,
+                    span: mapView.region.span
+                )
+                mapView.setRegion(newRegion, animated: true)
+                region = newRegion
             }
         }
     }
@@ -61,11 +86,39 @@ struct MapViewRepresentable: UIViewRepresentable {
         Coordinator(self)
     }
     
-    class Coordinator: NSObject, MKMapViewDelegate {
+    class Coordinator: NSObject, MKMapViewDelegate, UIGestureRecognizerDelegate {
         var parent: MapViewRepresentable
+        var isUserInteracting = false
+        private var interactionTimer: Timer?
         
         init(_ parent: MapViewRepresentable) {
             self.parent = parent
+        }
+        
+        @objc func handlePan(_ gesture: UIPanGestureRecognizer) {
+            handleUserInteraction()
+        }
+        
+        @objc func handlePinch(_ gesture: UIPinchGestureRecognizer) {
+            handleUserInteraction()
+        }
+        
+        @objc func handleRotation(_ gesture: UIRotationGestureRecognizer) {
+            handleUserInteraction()
+        }
+        
+        private func handleUserInteraction() {
+            isUserInteracting = true
+            
+            // Reset the flag after a delay to allow programmatic updates again
+            interactionTimer?.invalidate()
+            interactionTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
+                self?.isUserInteracting = false
+            }
+        }
+        
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            return true
         }
         
         func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
