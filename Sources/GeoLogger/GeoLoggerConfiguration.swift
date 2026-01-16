@@ -34,6 +34,12 @@ public struct GeoLoggerConfiguration {
     /// Automatically pause location updates when the device is likely stationary
     /// Defaults to true to save battery
     public var pausesLocationUpdatesAutomatically: Bool = true
+    
+    /// Automatically start/stop recording or replay sessions when location updates start/stop.
+    /// When true, recording/replay sessions are automatically managed with location updates.
+    /// When false, you must manually call start() and stop() methods to control sessions.
+    /// Defaults to true for backward compatibility.
+    public var shouldStopAndStartAutomatically: Bool = true
 
     public init() {}
 }

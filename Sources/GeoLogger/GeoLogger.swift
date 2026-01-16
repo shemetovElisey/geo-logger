@@ -6,10 +6,10 @@ import CoreLocation
 /// Use GeoLogger as a drop-in replacement for CLLocationManager. In replay mode,
 /// recorded location data is injected into delegate methods, making it transparent
 /// to the application that data is being replayed.
-public class GeoLogger: CLLocationManager {
-    private let configuration: GeoLoggerConfiguration
+open class GeoLogger: CLLocationManager {
     var recordingSession: RecordingSession?  // internal for InternalDelegate access
     var replaySession: ReplaySession?  // internal for InternalDelegate access
+    private let configuration: GeoLoggerConfiguration
     private var internalDelegate: InternalDelegate?
     
     /// Last location received (used in replay mode to override location property)
@@ -33,6 +33,32 @@ public class GeoLogger: CLLocationManager {
         
         setupForMode()
         allowsBackgroundLocationUpdates = configuration.allowsBackgroundLocationUpdates
+    }
+    
+    /// Start recording or replay session based on the current mode.
+    /// This method manually starts the session without calling startUpdatingLocation().
+    public func start() {
+        switch configuration.mode {
+        case .record:
+            try? recordingSession?.start()
+        case .replay:
+            replaySession?.start()
+        case .passthrough:
+            break
+        }
+    }
+    
+    /// Stop recording or replay session based on the current mode.
+    /// This method manually stops the session without calling stopUpdatingLocation().
+    public func stop() {
+        switch configuration.mode {
+        case .record:
+            try? recordingSession?.stop()
+        case .replay:
+            replaySession?.stop()
+        case .passthrough:
+            break
+        }
     }
     
     private func setupForMode() {
@@ -158,10 +184,14 @@ public class GeoLogger: CLLocationManager {
     public override func startUpdatingLocation() {
         switch configuration.mode {
         case .record:
-            try? recordingSession?.start()
+            if configuration.shouldStopAndStartAutomatically {
+                try? recordingSession?.start()
+            }
             super.startUpdatingLocation()
         case .replay:
-            replaySession?.start()
+            if configuration.shouldStopAndStartAutomatically {
+                replaySession?.start()
+            }
         case .passthrough:
             super.startUpdatingLocation()
         }
@@ -170,10 +200,22 @@ public class GeoLogger: CLLocationManager {
     public override func stopUpdatingLocation() {
         switch configuration.mode {
         case .record:
-            try? recordingSession?.stop()
+            if configuration.shouldStopAndStartAutomatically {
+                try? recordingSession?.stop()
+            } else {
+                recordingSession?.recordError(
+                    NSError(
+                        domain: "GeoLogger",
+                        code: 0,
+                        userInfo: [NSLocalizedDescriptionKey: "User stopped location updates while recording."]
+                    )
+                )
+            }
             super.stopUpdatingLocation()
         case .replay:
-            replaySession?.stop()
+            if configuration.shouldStopAndStartAutomatically {
+                replaySession?.stop()
+            }
         case .passthrough:
             super.stopUpdatingLocation()
         }
