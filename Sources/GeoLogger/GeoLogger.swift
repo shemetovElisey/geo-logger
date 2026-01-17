@@ -61,6 +61,36 @@ open class GeoLogger: CLLocationManager {
         }
     }
     
+    /// Seek to a specific time in the replay (only works in replay mode)
+    /// - Parameter time: Target time in seconds from the start of the recording
+    public func seek(to time: TimeInterval) {
+        guard configuration.mode == .replay else {
+            print("GeoLogger: seek(to:) is only available in replay mode")
+            return
+        }
+        replaySession?.seek(to: time)
+    }
+    
+    /// Seek to a specific progress in the replay (only works in replay mode)
+    /// - Parameter progress: Progress value from 0.0 (start) to 1.0 (end)
+    public func seek(toProgress progress: Double) {
+        guard configuration.mode == .replay else {
+            print("GeoLogger: seek(toProgress:) is only available in replay mode")
+            return
+        }
+        replaySession?.seek(toProgress: progress)
+    }
+    
+    /// Get all locations up to a specific time (only works in replay mode)
+    /// - Parameter time: Target time in seconds from the start
+    /// - Returns: Array of CLLocation objects from events up to the target time
+    public func getLocationsUpTo(time: TimeInterval) -> [CLLocation] {
+        guard configuration.mode == .replay else {
+            return []
+        }
+        return replaySession?.getLocationsUpTo(time: time) ?? []
+    }
+    
     private func setupForMode() {
         switch configuration.mode {
         case .record:

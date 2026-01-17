@@ -202,9 +202,9 @@ struct ContentView: View {
                             Text("Events: \(selectedRecording.eventCount)")
                                 .font(.caption)
                             
-                            // Progress bar
+                            // Progress bar and seek slider
                             if viewModel.isReplaying {
-                                VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: 8) {
                                     HStack {
                                         Text("Progress: \(Int(viewModel.replayProgress * 100))%")
                                             .font(.caption)
@@ -217,6 +217,23 @@ struct ContentView: View {
                                     
                                     ProgressView(value: viewModel.replayProgress)
                                         .progressViewStyle(LinearProgressViewStyle(tint: .green))
+                                    
+                                    // Seek slider
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("Seek")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        Slider(
+                                            value: Binding(
+                                                get: { viewModel.replayProgress },
+                                                set: { newValue in
+                                                    viewModel.seekReplay(toProgress: newValue)
+                                                }
+                                            ),
+                                            in: 0...1
+                                        )
+                                        .tint(.blue)
+                                    }
                                 }
                                 .padding(.top, 4)
                             }

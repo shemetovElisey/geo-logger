@@ -36,6 +36,7 @@ class LocationViewModel: NSObject, ObservableObject {
     private var recordingManager = RecordingManager.shared
     private var recordingStartTime: Date?
     private var temporaryReplayFileURL: URL?
+    private var previousReplayTime: TimeInterval = 0.0
     
     // Computed property that reads location directly from GeoLogger
     var currentLocation: CLLocation? {
@@ -104,6 +105,7 @@ class LocationViewModel: NSObject, ObservableObject {
         locationHistory = []
         replayProgress = 0.0
         replayCurrentTime = 0.0
+        previousReplayTime = 0.0
     }
     
     func startReplay(from fileURL: URL) {
@@ -233,7 +235,40 @@ class LocationViewModel: NSObject, ObservableObject {
         isReplaying = false
         replayProgress = 0.0
         replayCurrentTime = 0.0
+        previousReplayTime = 0.0
         cleanupTemporaryReplayFile()
+    }
+    
+    /// Seek to a specific time in the replay
+    /// - Parameter time: Target time in seconds from the start
+    func seekReplay(to time: TimeInterval) {
+        guard isReplaying, let logger = geoLogger else { return }
+        
+        // If seeking backwards, rebuild location history from events up to target time
+        if time < previousReplayTime {
+            locationHistory = logger.getLocationsUpTo(time: time)
+        }
+        
+        previousReplayTime = time
+        logger.seek(to: time)
+    }
+    
+    /// Seek to a specific progress in the replay
+    /// - Parameter progress: Progress value from 0.0 (start) to 1.0 (end)
+    func seekReplay(toProgress progress: Double) {
+        guard isReplaying, let logger = geoLogger else { return }
+        
+        // Calculate target time
+        guard let selectedRecording = selectedRecording else { return }
+        let targetTime = selectedRecording.duration * progress
+        
+        // If seeking backwards, rebuild location history from events up to target time
+        if targetTime < previousReplayTime {
+            locationHistory = logger.getLocationsUpTo(time: targetTime)
+        }
+        
+        previousReplayTime = targetTime
+        logger.seek(toProgress: progress)
     }
     
     func refreshRecordings() {
@@ -329,7 +364,13 @@ extension LocationViewModel: CLLocationManagerDelegate {
 
 extension LocationViewModel: GeoLoggerDelegate {
     func geoLogger(_ logger: GeoLogger, didUpdateReplayProgress progress: Double, currentTime: TimeInterval) {
+        // If time decreased (seeking backwards), rebuild location history from events up to current time
+        if currentTime < previousReplayTime {
+            locationHistory = logger.getLocationsUpTo(time: currentTime)
+        }
+        
         replayProgress = progress
         replayCurrentTime = currentTime
+        previousReplayTime = currentTime
     }
 }
