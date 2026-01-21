@@ -91,6 +91,29 @@ open class GeoLogger: CLLocationManager {
         return replaySession?.getLocationsUpTo(time: time) ?? []
     }
     
+    /// Get location at a specific progress (only works in replay mode)
+    /// - Parameter progress: Progress value from 0.0 (start) to 1.0 (end)
+    /// - Returns: CLLocation at the specified progress, or nil if no location events exist
+    public func getLocation(atProgress progress: Double) -> CLLocation? {
+        guard configuration.mode == .replay else {
+            print("GeoLogger: getLocation(atProgress:) is only available in replay mode")
+            return nil
+        }
+        return replaySession?.getLocation(atProgress: progress)
+    }
+    
+    /// Get the first location from the recording (only works in replay mode)
+    /// - Returns: First CLLocation in the recording, or nil if no location events exist
+    public func getFirstLocation() -> CLLocation? {
+        return getLocation(atProgress: 0.0)
+    }
+    
+    /// Get the last location from the recording (only works in replay mode)
+    /// - Returns: Last CLLocation in the recording, or nil if no location events exist
+    public func getLastLocation() -> CLLocation? {
+        return getLocation(atProgress: 1.0)
+    }
+    
     private func setupForMode() {
         switch configuration.mode {
         case .record:
@@ -116,6 +139,12 @@ open class GeoLogger: CLLocationManager {
                 customDirectory: configuration.directory
             )
             recordingSession = try RecordingSession(directory: directory)
+            
+            // Set up callback for recording progress
+            recordingSession?.onLocationRecorded = { [weak self] location, index in
+                guard let self = self else { return }
+                self.geoLoggerDelegate?.geoLogger(self, didRecordLocation: location, atIndex: index)
+            }
         } catch {
             print("GeoLogger: Failed to setup recording session: \(error)")
         }

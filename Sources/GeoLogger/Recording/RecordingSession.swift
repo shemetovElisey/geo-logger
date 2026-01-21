@@ -3,14 +3,19 @@ import CoreLocation
 
 /// Manages recording of location events to JSON file
 final class RecordingSession {
+    typealias LocationRecordedCallback = (CLLocation, Int) -> Void
+    
     private let directory: URL
     private let queue = DispatchQueue(label: "com.geologist.recording", qos: .utility)
 
     private var events: [GeoEvent] = []
     private var startTime: Date?
     private var fileName: String?
+    private var locationEventIndex = 0 // Index counter for location events only
 
     private(set) var isRecording = false
+    
+    var onLocationRecorded: LocationRecordedCallback?
 
     init(directory: URL) throws {
         self.directory = directory
@@ -23,6 +28,7 @@ final class RecordingSession {
             self.startTime = Date()
             self.fileName = FileManager.generateRecordingFileName()
             self.events = []
+            self.locationEventIndex = 0
             self.isRecording = true
         }
     }
@@ -47,6 +53,17 @@ final class RecordingSession {
                 location: location
             )
             self.events.append(event)
+            
+            // Get current index before incrementing
+            let currentIndex = self.locationEventIndex
+            self.locationEventIndex += 1
+
+            // Notify callback on main queue
+            if let callback = self.onLocationRecorded {
+                DispatchQueue.main.async {
+                    callback(location, currentIndex)
+                }
+            }
 
             // Flush every 10 events
             if self.events.count % 10 == 0 {

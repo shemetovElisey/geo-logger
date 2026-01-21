@@ -164,6 +164,67 @@ final class ReplaySession {
         return locations
     }
     
+    /// Get location at a specific progress (0.0 = first location, 1.0 = last location)
+    /// - Parameter progress: Progress value from 0.0 (start) to 1.0 (end)
+    /// - Returns: CLLocation at the specified progress, or nil if no location events exist
+    func getLocation(atProgress progress: Double) -> CLLocation? {
+        let clampedProgress = max(0.0, min(1.0, progress))
+        
+        // Filter only location events with their relative times
+        let locationEvents: [(relativeTime: TimeInterval, location: CLLocation)] = recordingFile.events.compactMap { event -> (TimeInterval, CLLocation)? in
+            if case .location(_, let relativeTime, let location) = event {
+                return (relativeTime, location)
+            }
+            return nil
+        }
+        
+        guard !locationEvents.isEmpty else { return nil }
+        
+        // If only one location, return it regardless of progress
+        if locationEvents.count == 1 {
+            return locationEvents[0].location
+        }
+        
+        // Calculate target time based on progress
+        let totalDuration = recordingFile.metadata.duration
+        let targetTime = totalDuration * clampedProgress
+        
+        // Find the location event closest to the target time
+        // For progress 0.0, return first location
+        // For progress 1.0, return last location
+        if clampedProgress == 0.0 {
+            return locationEvents.first?.location
+        } else if clampedProgress == 1.0 {
+            return locationEvents.last?.location
+        }
+        
+        // Find the closest location by time using binary search
+        var left = 0
+        var right = locationEvents.count - 1
+        var closestIndex = 0
+        var minDistance = abs(locationEvents[0].relativeTime - targetTime)
+        
+        // Binary search to find the closest location
+        while left <= right {
+            let mid = (left + right) / 2
+            let midTime = locationEvents[mid].relativeTime
+            let distance = abs(midTime - targetTime)
+            
+            if distance < minDistance {
+                minDistance = distance
+                closestIndex = mid
+            }
+            
+            if midTime < targetTime {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+        
+        return locationEvents[closestIndex].location
+    }
+    
     /// Cancel any pending scheduled events
     private func cancelPendingEvents() {
         pendingWorkItem?.cancel()

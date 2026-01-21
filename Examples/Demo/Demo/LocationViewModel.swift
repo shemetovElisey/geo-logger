@@ -298,15 +298,23 @@ class LocationViewModel: NSObject, ObservableObject {
     
     func shareRecording(_ recording: RecordingInfo) {
         let url = recordingManager.exportRecording(name: recording.name)
+        // Set URL first, then show sheet on next run loop to ensure SwiftUI updates
         shareURL = url
-        showShareSheet = true
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, self.shareURL != nil else { return }
+            self.showShareSheet = true
+        }
     }
     
     func exportRecordingAsGPX(_ recording: RecordingInfo) {
         do {
             let gpxURL = try recordingManager.exportRecordingAsGPX(name: recording.name)
+            // Set URL first, then show sheet on next run loop to ensure SwiftUI updates
             shareURL = gpxURL
-            showShareSheet = true
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self, self.shareURL != nil else { return }
+                self.showShareSheet = true
+            }
         } catch {
             errorMessage = "Failed to export as GPX: \(error.localizedDescription)"
             showError = true

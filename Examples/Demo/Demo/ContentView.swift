@@ -295,7 +295,16 @@ struct ContentView: View {
             } message: {
                 Text(viewModel.errorMessage)
             }
-            .sheet(isPresented: $viewModel.showShareSheet) {
+            .sheet(isPresented: Binding(
+                get: { viewModel.showShareSheet && viewModel.shareURL != nil },
+                set: { newValue in
+                    viewModel.showShareSheet = newValue
+                    if !newValue {
+                        // Clear shareURL when sheet is dismissed
+                        viewModel.shareURL = nil
+                    }
+                }
+            )) {
                 if let shareURL = viewModel.shareURL {
                     ShareSheet(activityItems: [shareURL])
                 }
@@ -410,10 +419,24 @@ struct ShareSheet: UIViewControllerRepresentable {
     let activityItems: [Any]
     
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        // Ensure we have valid activity items
+        guard !activityItems.isEmpty else {
+            // Return a view controller with empty items as fallback
+            return UIActivityViewController(activityItems: [], applicationActivities: nil)
+        }
+        let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        // Configure for iPad
+        if let popover = controller.popoverPresentationController {
+            popover.sourceView = UIView()
+        }
+        return controller
     }
     
-    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {
+        // Update activity items if they changed
+        // Note: UIActivityViewController doesn't support updating items after creation,
+        // but we ensure items are set correctly in makeUIViewController
+    }
 }
 
 // Helper function to format time
