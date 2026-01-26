@@ -6,6 +6,8 @@ import CoreLocation
 /// Use GeoLogger as a drop-in replacement for CLLocationManager. In replay mode,
 /// recorded location data is injected into delegate methods, making it transparent
 /// to the application that data is being replayed.
+///
+/// Data is stored in CoreData for persistence and efficient querying.
 open class GeoLogger: CLLocationManager {
     var recordingSession: RecordingSession?  // internal for InternalDelegate access
     var replaySession: ReplaySession?  // internal for InternalDelegate access
@@ -151,39 +153,29 @@ open class GeoLogger: CLLocationManager {
     }
     
     private func setupReplayMode() {
-        guard let fileName = configuration.replayFileName else {
-            print("GeoLogger: Replay mode requires replayFileName")
-            return
-        }
-        
         // Set up internal delegate to inject replay data
         internalDelegate = InternalDelegate(geoLogger: self, configuration: configuration)
         super.delegate = internalDelegate
         
         do {
-            let directory = try FileManager.default.geoLoggerDirectory(
-                customDirectory: configuration.directory
-            )
-            let fileURL = directory.appendingPathComponent(fileName)
+            let fileURL: URL
             
-            // Check if file is GPX or JSON
-            let isGPX = fileName.lowercased().hasSuffix(".gpx")
-            let recordingFile: RecordingFile
-            
-            if isGPX {
-                // Parse GPX file
-                recordingFile = try GPXParser.parseGPX(from: fileURL)
+            if let replayFileURL = configuration.replayFileURL {
+                // Use provided file URL directly
+                fileURL = replayFileURL
+            } else if let fileName = configuration.replayFileName {
+                // Build URL from directory and file name
+                let directory = try FileManager.default.geoLoggerDirectory(
+                    customDirectory: configuration.directory
+                )
+                fileURL = directory.appendingPathComponent(fileName)
             } else {
-                // Parse JSON file
-                let data = try Data(contentsOf: fileURL)
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .iso8601
-                recordingFile = try decoder.decode(RecordingFile.self, from: data)
+                print("GeoLogger: Replay mode requires replayFileName or replayFileURL")
+                return
             }
             
-            // Create ReplaySession from RecordingFile
             replaySession = try ReplaySession(
-                recordingFile: recordingFile,
+                fileURL: fileURL,
                 speedMultiplier: configuration.replaySpeedMultiplier,
                 loop: configuration.loopReplay
             )

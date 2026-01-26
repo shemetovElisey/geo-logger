@@ -1,4 +1,5 @@
 import XCTest
+import CoreLocation
 @testable import GeoLogger
 
 final class RecordingManagerTests: XCTestCase {
@@ -68,6 +69,44 @@ final class RecordingManagerTests: XCTestCase {
 
         XCTAssertEqual(exportURL, testFile)
         XCTAssertTrue(FileManager.default.fileExists(atPath: exportURL.path))
+    }
+    
+    func testExportRecordingAsGPX() throws {
+        let manager = RecordingManager(directory: tempDirectory)
+        
+        // Create a test JSON file with location event
+        let testFile = tempDirectory.appendingPathComponent("test_gpx.json")
+        let metadata = RecordingMetadata(
+            version: "1.0",
+            recordedAt: Date(),
+            device: "Test",
+            systemVersion: "iOS 17",
+            duration: 10,
+            eventCount: 1
+        )
+        let location = CLLocation(
+            coordinate: CLLocationCoordinate2D(latitude: 55.7558, longitude: 37.6173),
+            altitude: 150.0,
+            horizontalAccuracy: 10.0,
+            verticalAccuracy: 10.0,
+            timestamp: Date()
+        )
+        let event = GeoEvent.location(timestamp: Date(), relativeTime: 0, location: location)
+        let file = RecordingFile(metadata: metadata, events: [event])
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let data = try encoder.encode(file)
+        try data.write(to: testFile)
+
+        let gpxURL = try manager.exportRecordingAsGPX(name: "test_gpx.json")
+
+        XCTAssertTrue(FileManager.default.fileExists(atPath: gpxURL.path))
+        XCTAssertTrue(gpxURL.lastPathComponent.hasSuffix(".gpx"))
+        
+        // Verify GPX content
+        let gpxContent = try String(contentsOf: gpxURL, encoding: .utf8)
+        XCTAssertTrue(gpxContent.contains("<gpx"))
+        XCTAssertTrue(gpxContent.contains("lat=\"55.7558\""))
     }
 }
 

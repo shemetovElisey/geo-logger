@@ -5,10 +5,10 @@ public final class RecordingManager {
     private let directory: URL
 
     /// Shared instance using default directory
-    public static let shared = RecordingManager(directory: nil)
+    public static let shared = RecordingManager()
 
     /// Initialize with custom directory
-    public init(directory: URL?) {
+    public init(directory: URL? = nil) {
         if let directory = directory {
             self.directory = directory
         } else {
@@ -51,6 +51,9 @@ public final class RecordingManager {
     /// Delete a recording by name
     public func deleteRecording(name: String) throws {
         let fileURL = directory.appendingPathComponent(name)
+        guard FileManager.default.fileExists(atPath: fileURL.path) else {
+            throw RecordingManagerError.recordingNotFound
+        }
         try FileManager.default.removeItem(at: fileURL)
     }
 
@@ -69,9 +72,7 @@ public final class RecordingManager {
         // Load the recording file
         let jsonURL = directory.appendingPathComponent(name)
         let data = try Data(contentsOf: jsonURL)
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
-        let recordingFile = try decoder.decode(RecordingFile.self, from: data)
+        let recordingFile = try decodeRecordingFile(data)
         
         // Generate GPX file name
         let gpxName: String
@@ -93,6 +94,19 @@ public final class RecordingManager {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         return try decoder.decode(RecordingFile.self, from: data)
+    }
+}
+
+// MARK: - Errors
+
+public enum RecordingManagerError: LocalizedError {
+    case recordingNotFound
+    
+    public var errorDescription: String? {
+        switch self {
+        case .recordingNotFound:
+            return "Recording not found"
+        }
     }
 }
 

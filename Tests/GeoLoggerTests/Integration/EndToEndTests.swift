@@ -18,33 +18,15 @@ final class EndToEndTests: XCTestCase {
     }
 
     func testRecordAndReplay() throws {
-        // Step 1: Record
-        var recordConfig = GeoLoggerConfiguration()
-        recordConfig.mode = .record
-        recordConfig.directory = tempDirectory
-
-        let recordLogger = GeoLogger(configuration: recordConfig)
-
-        class RecordDelegate: NSObject, CLLocationManagerDelegate {
-            var locations: [CLLocation] = []
-
-            func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-                self.locations.append(contentsOf: locations)
-            }
-        }
-
-        let recordDelegate = RecordDelegate()
-        recordLogger.delegate = recordDelegate
-        recordLogger.startUpdatingLocation()
-
-        // Simulate location updates by calling CLLocationManagerDelegate methods directly
-        // (in real scenario CLLocationManager would call these)
+        // Step 1: Create a JSON recording file directly
+        let startTime = Date()
+        
         let location1 = CLLocation(
             coordinate: CLLocationCoordinate2D(latitude: 55.7558, longitude: 37.6173),
             altitude: 150.0,
             horizontalAccuracy: 10.0,
             verticalAccuracy: 10.0,
-            timestamp: Date()
+            timestamp: startTime
         )
 
         let location2 = CLLocation(
@@ -52,34 +34,39 @@ final class EndToEndTests: XCTestCase {
             altitude: 150.0,
             horizontalAccuracy: 10.0,
             verticalAccuracy: 10.0,
-            timestamp: Date().addingTimeInterval(1.0)
+            timestamp: startTime.addingTimeInterval(1.0)
         )
 
-        // Simulate CLLocationManager calling delegate methods
-        // Create a mock manager just for the test
-        let mockManager = CLLocationManager()
-        recordLogger.locationManager(mockManager, didUpdateLocations: [location1])
-        Thread.sleep(forTimeInterval: 0.1)
-        recordLogger.locationManager(mockManager, didUpdateLocations: [location2])
-        Thread.sleep(forTimeInterval: 0.1)
-
-        recordLogger.stopUpdatingLocation()
-
-        // Give time for async file write
-        Thread.sleep(forTimeInterval: 0.5)
-
+        let event1 = GeoEvent.location(timestamp: startTime, relativeTime: 0, location: location1)
+        let event2 = GeoEvent.location(timestamp: startTime.addingTimeInterval(1.0), relativeTime: 1.0, location: location2)
+        
+        let metadata = RecordingMetadata(
+            version: "1.0",
+            recordedAt: startTime,
+            device: "Test",
+            systemVersion: "iOS 17",
+            duration: 1.0,
+            eventCount: 2
+        )
+        let recordingFile = RecordingFile(metadata: metadata, events: [event1, event2])
+        
+        // Write to file
+        let jsonURL = tempDirectory.appendingPathComponent("test_recording.json")
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        let data = try encoder.encode(recordingFile)
+        try data.write(to: jsonURL)
+        
         // Step 2: Verify recording file exists
-        let files = try FileManager.default.contentsOfDirectory(at: tempDirectory, includingPropertiesForKeys: nil)
-        XCTAssertEqual(files.count, 1, "Should have created one recording file")
+        let manager = RecordingManager(directory: tempDirectory)
+        let recordings = manager.listRecordings()
+        XCTAssertEqual(recordings.count, 1, "Should have one recording file")
 
-        let recordingFileName = files[0].lastPathComponent
-
-        // Step 3: Replay
+        // Step 3: Replay from file
         var replayConfig = GeoLoggerConfiguration()
         replayConfig.mode = .replay
-        replayConfig.directory = tempDirectory
-        replayConfig.replayFileName = recordingFileName
-        replayConfig.replaySpeedMultiplier = 10.0
+        replayConfig.replayFileURL = jsonURL
+        replayConfig.replaySpeedMultiplier = 100.0 // Fast replay for tests
 
         let replayLogger = GeoLogger(configuration: replayConfig)
 
@@ -111,6 +98,44 @@ final class EndToEndTests: XCTestCase {
         XCTAssertEqual(replayDelegate.locations.count, 2)
         XCTAssertEqual(replayDelegate.locations[0].coordinate.latitude, 55.7558, accuracy: 0.0001)
         XCTAssertEqual(replayDelegate.locations[1].coordinate.latitude, 55.7559, accuracy: 0.0001)
+    }
+    
+    func testRecordingSession() throws {
+        // Test recording session directly - it uses CoreData as buffer and exports to JSON
+        let session = try RecordingSession(directory: tempDirectory)
+        
+        let exportExpectation = expectation(description: "Export completed")
+        session.onExportCompleted = { _ in
+            exportExpectation.fulfill()
+        }
+        
+        try session.start()
+        XCTAssertTrue(session.isRecording)
+        
+        let location = CLLocation(
+            coordinate: CLLocationCoordinate2D(latitude: 55.7558, longitude: 37.6173),
+            altitude: 150.0,
+            horizontalAccuracy: 10.0,
+            verticalAccuracy: 10.0,
+            timestamp: Date()
+        )
+        
+        session.recordLocation(location)
+        
+        // Give time for async write to CoreData
+        Thread.sleep(forTimeInterval: 0.2)
+        
+        try session.stop()
+        XCTAssertFalse(session.isRecording)
+        
+        // Wait for async export to complete
+        wait(for: [exportExpectation], timeout: 5.0)
+        
+        // Verify recording file was created (CoreData exports to JSON on stop)
+        let manager = RecordingManager(directory: tempDirectory)
+        let recordings = manager.listRecordings()
+        XCTAssertEqual(recordings.count, 1)
+        XCTAssertEqual(recordings[0].eventCount, 1)
     }
 }
 

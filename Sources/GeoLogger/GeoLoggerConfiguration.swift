@@ -2,9 +2,9 @@ import Foundation
 
 /// Operating mode for GeoLogger
 public enum GeoLoggerMode {
-    /// Record location updates to JSON file
+    /// Record location updates to JSON file (uses CoreData as buffer during recording)
     case record
-    /// Replay location updates from JSON file
+    /// Replay location updates from JSON or GPX file
     case replay
     /// Pass through to real CLLocationManager without logging
     case passthrough
@@ -21,8 +21,11 @@ public struct GeoLoggerConfiguration {
     /// Speed multiplier for replay (1.0 = real-time, 2.0 = double speed)
     public var replaySpeedMultiplier: Double = 1.0
 
-    /// File name for replay mode
+    /// File name for replay mode (JSON or GPX file in directory)
     public var replayFileName: String? = nil
+    
+    /// File URL for replay mode (alternative to replayFileName for external files)
+    public var replayFileURL: URL? = nil
 
     /// Whether to loop replay when it ends
     public var loopReplay: Bool = false

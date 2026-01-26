@@ -130,7 +130,7 @@ class LocationViewModel: NSObject, ObservableObject {
             // Use GeoLogger's replay mode with the temporary file
             var config = GeoLoggerConfiguration()
             config.mode = .replay
-            config.replayFileName = tempFileName
+            config.replayFileURL = tempFileURL
             config.replaySpeedMultiplier = replaySpeed
             config.loopReplay = false
             
@@ -200,7 +200,7 @@ class LocationViewModel: NSObject, ObservableObject {
             // Use GeoLogger's replay mode with the temporary file
             var config = GeoLoggerConfiguration()
             config.mode = .replay
-            config.replayFileName = tempFileName
+            config.replayFileURL = tempFileURL
             config.replaySpeedMultiplier = replaySpeed
             config.loopReplay = false
             
