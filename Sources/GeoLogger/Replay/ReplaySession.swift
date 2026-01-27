@@ -10,7 +10,7 @@ final class ReplaySession {
     private let recordingFile: RecordingFile
     private let speedMultiplier: Double
     private let loop: Bool
-    private let queue = DispatchQueue(label: "com.geologist.replay", qos: .userInitiated)
+    private let queue = DispatchQueue(label: "com.geologger.replay", qos: .userInitiated)
 
     private var currentEventIndex = 0
     private var replayStartTime: Date?

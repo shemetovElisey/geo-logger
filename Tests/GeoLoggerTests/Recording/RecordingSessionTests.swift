@@ -32,24 +32,10 @@ final class RecordingSessionTests: XCTestCase {
         XCTAssertTrue(session.isRecording)
         
         try session.stop()
-        
-        // Wait for async export to complete
-        waitForExportCompletion(session)
     }
 
     func testRecordLocation() throws {
         let session = try RecordingSession(directory: tempDirectory)
-        
-        let exportExpectation = expectation(description: "Export completed")
-        var exportedURL: URL?
-        
-        session.onExportCompleted = { result in
-            if case .success(let url) = result {
-                exportedURL = url
-            }
-            exportExpectation.fulfill()
-        }
-        
         try session.start()
 
         let coordinate = CLLocationCoordinate2D(latitude: 55.7558, longitude: 37.6173)
@@ -67,16 +53,17 @@ final class RecordingSessionTests: XCTestCase {
         Thread.sleep(forTimeInterval: 0.2)
 
         try session.stop()
-        
-        // Wait for async export
-        wait(for: [exportExpectation], timeout: 5.0)
 
         // Verify JSON file was created
-        XCTAssertNotNil(exportedURL)
-        XCTAssertTrue(exportedURL!.lastPathComponent.hasPrefix("geo_log_"))
+        let files = try FileManager.default.contentsOfDirectory(at: tempDirectory, includingPropertiesForKeys: nil)
+        let jsonFiles = files.filter { $0.pathExtension == "json" }
+        XCTAssertEqual(jsonFiles.count, 1)
+        
+        let fileURL = jsonFiles[0]
+        XCTAssertTrue(fileURL.lastPathComponent.hasPrefix("geo_log_"))
         
         // Verify file content
-        let data = try Data(contentsOf: exportedURL!)
+        let data = try Data(contentsOf: fileURL)
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let recordingFile = try decoder.decode(RecordingFile.self, from: data)
@@ -96,17 +83,6 @@ final class RecordingSessionTests: XCTestCase {
     
     func testRecordError() throws {
         let session = try RecordingSession(directory: tempDirectory)
-        
-        let exportExpectation = expectation(description: "Export completed")
-        var exportedURL: URL?
-        
-        session.onExportCompleted = { result in
-            if case .success(let url) = result {
-                exportedURL = url
-            }
-            exportExpectation.fulfill()
-        }
-        
         try session.start()
 
         let error = NSError(domain: "TestDomain", code: 42, userInfo: [
@@ -119,15 +95,14 @@ final class RecordingSessionTests: XCTestCase {
         Thread.sleep(forTimeInterval: 0.2)
 
         try session.stop()
-        
-        // Wait for async export
-        wait(for: [exportExpectation], timeout: 5.0)
 
         // Verify JSON file was created
-        XCTAssertNotNil(exportedURL)
+        let files = try FileManager.default.contentsOfDirectory(at: tempDirectory, includingPropertiesForKeys: nil)
+        let jsonFiles = files.filter { $0.pathExtension == "json" }
+        XCTAssertEqual(jsonFiles.count, 1)
         
         // Verify file content
-        let data = try Data(contentsOf: exportedURL!)
+        let data = try Data(contentsOf: jsonFiles[0])
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         let recordingFile = try decoder.decode(RecordingFile.self, from: data)
@@ -141,14 +116,6 @@ final class RecordingSessionTests: XCTestCase {
             XCTAssertEqual(nsError.code, 42)
         } else {
             XCTFail("Expected error event")
-        }
-    }
-    
-    // Helper to wait for export completion
-    private func waitForExportCompletion(_ session: RecordingSession, timeout: TimeInterval = 2.0) {
-        let deadline = Date().addingTimeInterval(timeout)
-        while session.isExporting && Date() < deadline {
-            Thread.sleep(forTimeInterval: 0.05)
         }
     }
 }

@@ -104,11 +104,6 @@ final class EndToEndTests: XCTestCase {
         // Test recording session directly - it uses CoreData as buffer and exports to JSON
         let session = try RecordingSession(directory: tempDirectory)
         
-        let exportExpectation = expectation(description: "Export completed")
-        session.onExportCompleted = { _ in
-            exportExpectation.fulfill()
-        }
-        
         try session.start()
         XCTAssertTrue(session.isRecording)
         
@@ -127,9 +122,6 @@ final class EndToEndTests: XCTestCase {
         
         try session.stop()
         XCTAssertFalse(session.isRecording)
-        
-        // Wait for async export to complete
-        wait(for: [exportExpectation], timeout: 5.0)
         
         // Verify recording file was created (CoreData exports to JSON on stop)
         let manager = RecordingManager(directory: tempDirectory)

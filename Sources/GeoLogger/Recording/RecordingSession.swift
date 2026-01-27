@@ -6,12 +6,10 @@ import CoreData
 /// Data is exported to JSON file on stop() and CoreData is cleared.
 final class RecordingSession {
     typealias LocationRecordedCallback = (CLLocation, Int) -> Void
-    typealias ExportCompletionCallback = (Result<URL, Error>) -> Void
     
     private let persistenceController: PersistenceController
     private let directory: URL
-    private let queue = DispatchQueue(label: "com.geologist.recording", qos: .utility)
-    private let exportQueue = DispatchQueue(label: "com.geologist.export", qos: .background)
+    private let queue = DispatchQueue(label: "com.geologger.recording", qos: .utility)
     private var backgroundContext: NSManagedObjectContext?
 
     private var startTime: Date?
@@ -20,10 +18,8 @@ final class RecordingSession {
     private var locationEventIndex = 0 // Index counter for location events only
 
     private(set) var isRecording = false
-    private(set) var isExporting = false
     
     var onLocationRecorded: LocationRecordedCallback?
-    var onExportCompleted: ExportCompletionCallback?
 
     init(directory: URL? = nil, persistenceController: PersistenceController = .shared) throws {
         self.persistenceController = persistenceController
@@ -103,48 +99,29 @@ final class RecordingSession {
     func stop() throws {
         guard isRecording else { return }
 
+        var exportError: Error?
+        
         queue.sync(flags: .barrier) {
             self.isRecording = false
-            self.isExporting = true
-        }
-        
-        // Capture values needed for async export
-        let recordingId = currentRecordingId
-        let context = backgroundContext
-        let fileName = self.fileName
-        let startTime = self.startTime
-        
-        // Clear references immediately (stop returns fast)
-        queue.sync(flags: .barrier) {
-            self.currentRecordingId = nil
-            self.backgroundContext = nil
-        }
-        
-        // Export asynchronously in background
-        exportQueue.async { [weak self] in
-            guard let self = self else { return }
             
-            var exportResult: Result<URL, Error>?
-            
-            context?.performAndWait {
-                guard let context = context,
-                      let recordingId = recordingId,
+            // Export to JSON file and clear CoreData
+            self.backgroundContext?.performAndWait {
+                guard let context = self.backgroundContext,
+                      let recordingId = self.currentRecordingId,
                       let recording = CDRecording.fetch(byId: recordingId, in: context) else {
-                    exportResult = .failure(RecordingSessionError.recordingNotFound)
                     return
                 }
                 
                 // Update final duration
-                if let startTime = startTime {
+                if let startTime = self.startTime {
                     recording.duration = Date().timeIntervalSince(startTime)
                 }
                 
-                // Try to export to JSON file
+                // Export to JSON file
                 do {
-                    let fileURL = try self.exportToJSON(recording: recording, fileName: fileName)
-                    exportResult = .success(fileURL)
+                    try self.exportToJSON(recording: recording, fileName: self.fileName)
                 } catch {
-                    exportResult = .failure(error)
+                    exportError = error
                     print("GeoLogger: Failed to export recording: \(error)")
                 }
                 
@@ -153,16 +130,13 @@ final class RecordingSession {
                 self.persistenceController.save(context: context)
             }
             
-            self.queue.sync(flags: .barrier) {
-                self.isExporting = false
-            }
-            
-            // Notify completion on main queue
-            if let result = exportResult, let callback = self.onExportCompleted {
-                DispatchQueue.main.async {
-                    callback(result)
-                }
-            }
+            self.currentRecordingId = nil
+            self.backgroundContext = nil
+        }
+        
+        // Propagate export error if any
+        if let error = exportError {
+            throw error
         }
     }
     
